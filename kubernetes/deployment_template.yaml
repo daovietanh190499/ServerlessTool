@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {tool_slug}
+  labels:
+    app: {tool_slug}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {tool_slug}
+  template:
+    metadata:
+      labels:
+        app: {tool_slug}
+    spec:
+      containers:
+      - name: {tool_slug}
+        image: {docker_image}
+        ports:
+        - containerPort: 8000
+        env:
+        {env_vars}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {tool_slug}
+spec:
+  selector:
+    app: {tool_slug}
+  ports:
+  - port: 80
+    targetPort: 8000
+  type: ClusterIP 

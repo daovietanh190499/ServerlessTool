@@ -1,0 +1,128 @@
+pipeline {
+    agent any
+    
+    parameters {
+        string(name: 'TOOL_ID', defaultValue: '', description: 'ID của công cụ cần build')
+    }
+    
+    stages {
+        stage('Prepare') {
+            steps {
+                script {
+                    // Lấy thông tin công cụ từ API
+                    def toolInfo = sh(script: """
+                        curl -s http://dashboard/api/tools/${params.TOOL_ID}/
+                    """, returnStdout: true).trim()
+                    
+                    def tool = readJSON text: toolInfo
+                    
+                    // Lưu thông tin vào biến môi trường
+                    env.TOOL_NAME = tool.name
+                    env.TOOL_SLUG = tool.slug
+                    
+                    // Tạo thư mục làm việc
+                    sh "mkdir -p workspace/${env.TOOL_SLUG}"
+                    
+                    def requirements = tool.requirements ?: "fastapi==0.95.1\nuvicorn==0.22.0\n"
+                    
+                    // Đảm bảo requirements có fastapi và uvicorn
+                    if (!requirements.contains("fastapi==")) {
+                        requirements += "\nfastapi==0.95.1\n"
+                    }
+                    if (!requirements.contains("uvicorn==")) {
+                        requirements += "\nuvicorn==0.22.0\n"
+                    }
+
+                    // Tạo file requirements.txt
+                    writeFile file: "workspace/${env.TOOL_SLUG}/requirements.txt", text: tool.requirements
+                    
+                    // Tạo file main.py (script của người dùng)
+                    writeFile file: "workspace/${env.TOOL_SLUG}/main.py", text: tool.python_script
+                    
+                    // Tạo file app.py (FastAPI template)
+                    def appPyContent = libraryResource 'templates/fastapi_template.py'
+                    writeFile file: "workspace/${env.TOOL_SLUG}/app.py", text: appPyContent
+                    
+                    // Tạo file utils.py
+                    def utilsPyContent = libraryResource 'templates/utils.py'
+                    writeFile file: "workspace/${env.TOOL_SLUG}/utils.py", text: utilsPyContent
+                    
+                    // Tạo Dockerfile
+                    writeFile file: "workspace/${env.TOOL_SLUG}/Dockerfile", text: """
+                        FROM python:3.9-slim
+                        
+                        WORKDIR /app
+                        
+                        COPY requirements.txt .
+                        RUN pip install --no-cache-dir -r requirements.txt
+                        
+                        COPY . .
+                        
+                        EXPOSE 8000
+                        
+                        CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+                    """
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def imageName = "tools/${env.TOOL_SLUG}:latest"
+                    
+                    dir("workspace/${env.TOOL_SLUG}") {
+                        sh "docker build -t ${imageName} ."
+                    }
+                    
+                    env.IMAGE_NAME = imageName
+                }
+            }
+        }
+        
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Đẩy image lên registry (có thể là Docker Hub hoặc registry nội bộ)
+                    sh "docker push ${env.IMAGE_NAME}"
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            script {
+                // Gửi thông báo thành công về dashboard
+                sh """
+                    curl -X POST http://dashboard/api/build-callback/ \\
+                    -H "Content-Type: application/json" \\
+                    -d '{
+                        "tool_id": "${params.TOOL_ID}",
+                        "status": "success",
+                        "log": "Build thành công. Image: ${env.IMAGE_NAME}",
+                        "image_name": "${env.IMAGE_NAME}"
+                    }'
+                """
+            }
+        }
+        failure {
+            script {
+                // Gửi thông báo thất bại về dashboard
+                sh """
+                    curl -X POST http://dashboard/api/build-callback/ \\
+                    -H "Content-Type: application/json" \\
+                    -d '{
+                        "tool_id": "${params.TOOL_ID}",
+                        "status": "error",
+                        "log": "Build thất bại. Kiểm tra log Jenkins để biết thêm chi tiết."
+                    }'
+                """
+            }
+        }
+        cleanup {
+            // Dọn dẹp workspace
+            sh "rm -rf workspace/${env.TOOL_SLUG}"
+        }
+    }
+} 

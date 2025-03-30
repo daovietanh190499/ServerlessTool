@@ -1,0 +1,190 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}{{ tool.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ tool.name }}</h1>
+    <div>
+        <a href="{% url 'tool_update' tool.slug %}" class="btn btn-outline-primary">
+            <i class="bi bi-pencil"></i> Sửa
+        </a>
+        <a href="{% url 'script_editor' tool.slug %}" class="btn btn-outline-secondary">
+            <i class="bi bi-code-slash"></i> Sửa Script
+        </a>
+        {% if not tool.is_built %}
+            <a href="{% url 'build_tool' tool.slug %}" class="btn btn-success">
+                <i class="bi bi-gear"></i> Build
+            </a>
+        {% elif not tool.is_running %}
+            <a href="{% url 'deploy_tool' tool.slug %}" class="btn btn-primary">
+                <i class="bi bi-play"></i> Chạy
+            </a>
+        {% else %}
+            <a href="{% url 'stop_tool' tool.slug %}" class="btn btn-danger">
+                <i class="bi bi-stop"></i> Dừng
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Thông tin công cụ</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Mô tả:</strong> {{ tool.description|default:"Không có mô tả" }}</p>
+                <p><strong>Trạng thái:</strong> 
+                    {% if tool.is_built %}
+                        <span class="badge bg-success">Đã build</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Chưa build</span>
+                    {% endif %}
+                    
+                    {% if tool.is_running %}
+                        <span class="badge bg-primary">Đang chạy</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Chưa chạy</span>
+                    {% endif %}
+                </p>
+                <p><strong>Docker Image:</strong> {{ tool.docker_image|default:"Chưa có" }}</p>
+                <p><strong>Ngày tạo:</strong> {{ tool.created_at|date:"d/m/Y H:i" }}</p>
+                <p><strong>Cập nhật lần cuối:</strong> {{ tool.updated_at|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Script Python</h5>
+                <a href="{% url 'script_editor' tool.slug %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-pencil"></i> Sửa
+                </a>
+            </div>
+            <div class="card-body">
+                <pre class="bg-light p-3 rounded"><code>{{ tool.python_script|default:"# Chưa có script" }}</code></pre>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Requirements</h5>
+                <a href="{% url 'tool_update' tool.slug %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-pencil"></i> Sửa
+                </a>
+            </div>
+            <div class="card-body">
+                <pre class="bg-light p-3 rounded"><code>{{ tool.requirements|default:"# Chưa có requirements" }}</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Biến môi trường</h5>
+                <a href="{% url 'manage_env_vars' tool.slug %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-pencil"></i> Quản lý
+                </a>
+            </div>
+<div class="card-body">
+                {% if env_vars %}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Value</th>
+                                <th>Bảo mật</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for env in env_vars %}
+                                <tr>
+                                    <td>{{ env.key }}</td>
+                                    <td>
+                                        {% if env.is_secret %}
+                                            ********
+                                        {% else %}
+                                            {{ env.value }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if env.is_secret %}
+                                            <i class="bi bi-lock-fill text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-unlock text-secondary"></i>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-muted">Chưa có biến môi trường nào</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Công cụ phụ thuộc</h5>
+                <a href="{% url 'manage_dependencies' tool.slug %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-pencil"></i> Quản lý
+                </a>
+            </div>
+            <div class="card-body">
+                {% if dependencies %}
+                    <ul class="list-group">
+                        {% for dep in dependencies %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ dep.dependent_tool.name }}
+                                <a href="{% url 'remove_dependency' dep.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Chưa có công cụ phụ thuộc nào</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Build Logs</h5>
+            </div>
+            <div class="card-body">
+                {% if build_logs %}
+                    <div class="accordion" id="buildLogsAccordion">
+                        {% for log in build_logs %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#buildLog{{ log.id }}">
+                                        {{ log.timestamp|date:"d/m/Y H:i" }} - 
+                                        {% if log.status == 'success' %}
+                                            <span class="badge bg-success ms-2">Thành công</span>
+                                        {% elif log.status == 'error' %}
+                                            <span class="badge bg-danger ms-2">Lỗi</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary ms-2">{{ log.status }}</span>
+                                        {% endif %}
+                                    </button>
+                                </h2>
+                                <div id="buildLog{{ log.id }}" class="accordion-collapse collapse" data-bs-parent="#buildLogsAccordion">
+                                    <div class="accordion-body">
+                                        <pre class="bg-light p-2 rounded"><code>{{ log.log }}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Chưa có build logs</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

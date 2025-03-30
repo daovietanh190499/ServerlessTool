@@ -1,0 +1,71 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Quản lý biến môi trường - {{ tool.name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2>Quản lý biến môi trường - {{ tool.name }}</h2>
+        <a href="{% url 'tool_detail' tool.slug %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>Bảo mật</th>
+                        <th>Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in formset %}
+                        <tr class="formset-row">
+                            <td>
+                                {{ form.id }}
+                                {{ form.key.errors }}
+                                <input type="text" name="{{ form.key.name }}" value="{{ form.key.value|default:'' }}" 
+                                       class="form-control {% if form.key.errors %}is-invalid{% endif %}" 
+                                       placeholder="KEY_NAME">
+                            </td>
+                            <td>
+                                {{ form.value.errors }}
+                                <input type="text" name="{{ form.value.name }}" value="{{ form.value.value|default:'' }}" 
+                                       class="form-control {% if form.value.errors %}is-invalid{% endif %}" 
+                                       placeholder="value">
+                            </td>
+                            <td class="text-center">
+                                <div class="form-check">
+                                    <input type="checkbox" name="{{ form.is_secret.name }}" 
+                                           {% if form.is_secret.value %}checked{% endif %} 
+                                           class="form-check-input" id="{{ form.is_secret.id_for_label }}">
+                                </div>
+                            </td>
+                            <td>
+                                {% if form.instance.pk %}
+                                    <div class="form-check">
+                                        <input type="checkbox" name="{{ form.DELETE.name }}" 
+                                               class="form-check-input" id="{{ form.DELETE.id_for_label }}">
+                                        <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">Xóa</label>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="d-flex justify-content-between mt-3">
+                <a href="{% url 'tool_detail' tool.slug %}" class="btn btn-secondary">Hủy</a>
+                <button type="submit" class="btn btn-primary">Lưu biến môi trường</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 
