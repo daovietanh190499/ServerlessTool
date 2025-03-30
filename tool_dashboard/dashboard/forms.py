@@ -6,9 +6,26 @@ class ToolForm(forms.ModelForm):
         model = Tool
         fields = ['name', 'description', 'python_script', 'requirements']
         widgets = {
-            'python_script': forms.HiddenInput(),
-            'requirements': forms.Textarea(attrs={'rows': 5, 'placeholder': 'fastapi==0.95.1\nuvicorn==0.22.0'})
+            'python_script': forms.Textarea(attrs={
+                'rows': 10,
+                'class': 'form-control code-editor',
+                'placeholder': '# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result'
+            }),
+            'requirements': forms.Textarea(attrs={
+                'rows': 5, 
+                'placeholder': 'fastapi==0.95.1\nuvicorn==0.22.0\n# Thêm các gói khác ở đây'
+            })
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Đảm bảo requirements có sẵn các gói mặc định khi tạo form mới
+        if not self.instance.pk and not self.initial.get('requirements'):
+            self.initial['requirements'] = "fastapi==0.95.1\nuvicorn==0.22.0\n"
+        
+        # Đảm bảo python_script có mẫu mặc định khi tạo form mới
+        if not self.instance.pk and not self.initial.get('python_script'):
+            self.initial['python_script'] = "# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result"
 
 class EnvironmentVariableForm(forms.ModelForm):
     class Meta:

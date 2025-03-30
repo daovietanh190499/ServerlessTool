@@ -42,6 +42,14 @@ class ToolCreateView(CreateView):
     template_name = 'dashboard/tool_form.html'
     success_url = reverse_lazy('tool_list')
     
+    def get_initial(self):
+        initial = super().get_initial()
+        # Đảm bảo requirements có sẵn các gói mặc định
+        initial['requirements'] = "fastapi==0.95.1\nuvicorn==0.22.0\n"
+        # Thêm mẫu Python script mặc định
+        initial['python_script'] = "# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result"
+        return initial
+    
     def form_valid(self, form):
         messages.success(self.request, f"Công cụ {form.instance.name} đã được tạo thành công!")
         return super().form_valid(form)

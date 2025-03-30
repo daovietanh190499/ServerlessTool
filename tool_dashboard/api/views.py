@@ -75,7 +75,19 @@ class ToolCreateSerializer(serializers.ModelSerializer):
             "message": {"type": "string"}
         }},
         400: {"type": "object", "properties": {"error": {"type": "string"}}}
-    }
+    },
+    examples=[
+        OpenApiExample(
+            'Ví dụ tạo công cụ',
+            value={
+                'name': 'Công cụ mới',
+                'description': 'Mô tả công cụ',
+                'python_script': '# Script Python\n\ndef process(input_data):\n    return {"result": input_data}',
+                'requirements': 'fastapi==0.95.1\nuvicorn==0.22.0\npandas==1.5.3'
+            },
+            request_only=True,
+        )
+    ]
 )
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -97,6 +109,10 @@ def create_tool_api(request):
                     if tool.requirements and not tool.requirements.endswith('\n'):
                         tool.requirements += '\n'
                     tool.requirements += package + '\n'
+            
+            # Đảm bảo python_script có mẫu mặc định nếu trống
+            if not tool.python_script:
+                tool.python_script = "# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result"
             
             tool.save()
             
