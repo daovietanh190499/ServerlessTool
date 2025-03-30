@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.forms import inlineformset_factory
 
 from .models import Tool, EnvironmentVariable, ToolDependency, BuildLog, DeploymentLog
-from .forms import ToolForm, EnvironmentVariableForm, ToolDependencyForm
+from .forms import ToolForm, EnvironmentVariableForm, EnvironmentVariableFormSet, ToolDependencyForm
 import json
 import subprocess
 import os
@@ -30,7 +30,7 @@ class ToolDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['env_vars'] = self.object.environment_variables.all()
+        context['env_vars'] = self.object.environmentvariable_set.all()
         context['dependencies'] = self.object.dependencies.all()
         context['build_logs'] = self.object.build_logs.order_by('-timestamp')[:5]
         context['deployment_logs'] = self.object.deployment_logs.order_by('-timestamp')[:5]
@@ -89,24 +89,89 @@ def script_editor_view(request, slug):
 
 def manage_env_vars(request, slug):
     tool = get_object_or_404(Tool, slug=slug)
-    EnvVarFormSet = inlineformset_factory(
-        Tool, EnvironmentVariable, form=EnvironmentVariableForm, 
-        extra=1, can_delete=True
-    )
     
     if request.method == 'POST':
-        formset = EnvVarFormSet(request.POST, instance=tool)
+        formset = EnvironmentVariableFormSet(request.POST, instance=tool)
         if formset.is_valid():
             formset.save()
-            messages.success(request, "Biến môi trường đã được cập nhật!")
+            messages.success(request, "Biến môi trường đã được cập nhật thành công.")
             return redirect('tool_detail', slug=tool.slug)
     else:
-        formset = EnvVarFormSet(instance=tool)
+        formset = EnvironmentVariableFormSet(instance=tool)
     
     return render(request, 'dashboard/env_var_form.html', {
         'tool': tool,
-        'formset': formset
+        'formset': formset,
     })
+
+def add_env_var(request, slug):
+    tool = get_object_or_404(Tool, slug=slug)
+    
+    if request.method == 'POST':
+        key = request.POST.get('key')
+        value = request.POST.get('value')
+        is_secret = request.POST.get('is_secret') == 'on'
+        
+        if key and value:
+            # Kiểm tra xem key đã tồn tại chưa
+            if EnvironmentVariable.objects.filter(tool=tool, key=key).exists():
+                messages.error(request, f"Biến môi trường với key '{key}' đã tồn tại.")
+            else:
+                EnvironmentVariable.objects.create(
+                    tool=tool,
+                    key=key,
+                    value=value,
+                    is_secret=is_secret
+                )
+                messages.success(request, f"Biến môi trường '{key}' đã được thêm thành công.")
+                return redirect('manage_env_vars', slug=tool.slug)
+        else:
+            messages.error(request, "Vui lòng nhập cả key và value.")
+    
+    env_vars = EnvironmentVariable.objects.filter(tool=tool)
+    return render(request, 'dashboard/manage_env_vars.html', {
+        'tool': tool,
+        'env_vars': env_vars,
+    })
+
+def edit_env_var(request, slug, env_id):
+    tool = get_object_or_404(Tool, slug=slug)
+    env_var = get_object_or_404(EnvironmentVariable, id=env_id, tool=tool)
+    
+    if request.method == 'POST':
+        key = request.POST.get('key')
+        value = request.POST.get('value')
+        is_secret = request.POST.get('is_secret') == 'on'
+        
+        if key and value:
+            # Kiểm tra xem key mới đã tồn tại chưa (nếu key thay đổi)
+            if key != env_var.key and EnvironmentVariable.objects.filter(tool=tool, key=key).exists():
+                messages.error(request, f"Biến môi trường với key '{key}' đã tồn tại.")
+            else:
+                env_var.key = key
+                env_var.value = value
+                env_var.is_secret = is_secret
+                env_var.save()
+                messages.success(request, f"Biến môi trường '{key}' đã được cập nhật thành công.")
+                return redirect('manage_env_vars', slug=tool.slug)
+        else:
+            messages.error(request, "Vui lòng nhập cả key và value.")
+    
+    return render(request, 'dashboard/edit_env_var.html', {
+        'tool': tool,
+        'env_var': env_var,
+    })
+
+def delete_env_var(request, slug, env_id):
+    tool = get_object_or_404(Tool, slug=slug)
+    env_var = get_object_or_404(EnvironmentVariable, id=env_id, tool=tool)
+    
+    if request.method == 'POST':
+        key = env_var.key
+        env_var.delete()
+        messages.success(request, f"Biến môi trường '{key}' đã được xóa thành công.")
+    
+    return redirect('manage_env_vars', slug=tool.slug)
 
 def manage_dependencies(request, slug):
     tool = get_object_or_404(Tool, slug=slug)

@@ -23,16 +23,16 @@ class Tool(models.Model):
         super().save(*args, **kwargs)
 
 class EnvironmentVariable(models.Model):
-    tool = models.ForeignKey(Tool, on_delete=models.CASCADE, related_name='environment_variables')
-    key = models.CharField(max_length=100)
-    value = models.CharField(max_length=500)
+    tool = models.ForeignKey(Tool, on_delete=models.CASCADE)
+    key = models.CharField(max_length=255)
+    value = models.TextField()
     is_secret = models.BooleanField(default=False)
     
     class Meta:
         unique_together = ('tool', 'key')
     
     def __str__(self):
-        return f"{self.tool.name} - {self.key}"
+        return f"{self.key} ({self.tool.name})"
 
 class ToolDependency(models.Model):
     tool = models.ForeignKey(Tool, on_delete=models.CASCADE, related_name='dependencies')

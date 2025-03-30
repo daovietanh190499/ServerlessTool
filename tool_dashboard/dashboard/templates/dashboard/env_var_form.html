@@ -31,43 +31,33 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         {% for form in formset %}
-                            <tr class="formset-row hover:bg-gray-50 transition-colors duration-150">
+                            <tr class="{% cycle 'bg-white' 'bg-gray-50' %}">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     {{ form.id }}
-                                    {{ form.key.errors }}
-                                    <input type="text" name="{{ form.key.name }}" value="{{ form.key.value|default:'' }}" 
-                                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.key.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
-                                           placeholder="KEY_NAME">
-                                    {% if form.key.errors %}
-                                        <p class="mt-2 text-sm text-red-600">{{ form.key.errors.0 }}</p>
-                                    {% endif %}
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ form.key }}
+                                        {% if form.key.errors %}
+                                            <p class="mt-1 text-xs text-red-600">{{ form.key.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    {{ form.value.errors }}
-                                    <input type="text" name="{{ form.value.name }}" value="{{ form.value.value|default:'' }}" 
-                                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.value.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
-                                           placeholder="value">
-                                    {% if form.value.errors %}
-                                        <p class="mt-2 text-sm text-red-600">{{ form.value.errors.0 }}</p>
-                                    {% endif %}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    <div class="flex items-center justify-center">
-                                        <input type="checkbox" name="{{ form.is_secret.name }}" 
-                                               {% if form.is_secret.value %}checked{% endif %} 
-                                               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded transition-colors duration-150" 
-                                               id="{{ form.is_secret.id_for_label }}">
+                                    <div class="text-sm text-gray-900">
+                                        {{ form.value }}
+                                        {% if form.value.errors %}
+                                            <p class="mt-1 text-xs text-red-600">{{ form.value.errors.0 }}</p>
+                                        {% endif %}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    {% if form.instance.pk %}
-                                        <div class="flex items-center justify-center">
-                                            <input type="checkbox" name="{{ form.DELETE.name }}" 
-                                                   class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded transition-colors duration-150" 
-                                                   id="{{ form.DELETE.id_for_label }}">
-                                            <label class="ml-2 text-sm text-gray-700" for="{{ form.DELETE.id_for_label }}">Xóa</label>
-                                        </div>
-                                    {% endif %}
+                                    <div class="text-sm text-gray-900">
+                                        {{ form.is_secret }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <div class="text-sm text-gray-900">
+                                        {{ form.DELETE }}
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -75,35 +65,22 @@
                 </table>
             </div>
             
-            <div class="flex justify-between items-center mt-6 pt-6 border-t border-gray-200">
+            <div class="mt-6 flex justify-between">
                 <a href="{% url 'tool_detail' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-x mr-2"></i> Hủy
                 </a>
-                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-                    <i class="bi bi-save mr-2"></i> Lưu biến môi trường
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    <i class="bi bi-save mr-2"></i> Lưu thay đổi
                 </button>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- Help section -->
-<div class="mt-6 bg-white rounded-lg shadow-md overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
-        <h3 class="text-lg font-medium text-gray-900 flex items-center">
-            <i class="bi bi-info-circle mr-2 text-blue-500"></i>
-            Thông tin về biến môi trường
-        </h3>
-    </div>
-    <div class="p-6">
-        <div class="prose prose-sm max-w-none text-gray-500">
-            <p>Biến môi trường cho phép bạn cấu hình ứng dụng mà không cần thay đổi mã nguồn. Chúng được truyền vào container khi ứng dụng được triển khai.</p>
-            
-            <h4 class="text-gray-700 font-medium mt-4">Hướng dẫn:</h4>
-            <ul class="mt-2 space-y-2">
+        
+        <div class="mt-8 bg-gray-50 p-4 rounded-md border border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900 mb-2">Hướng dẫn</h3>
+            <ul class="space-y-2 text-sm text-gray-600">
                 <li class="flex items-start">
                     <i class="bi bi-key text-primary-500 mt-0.5 mr-2"></i>
-                    <span><strong>Key:</strong> Tên biến môi trường (ví dụ: DATABASE_URL, API_KEY)</span>
+                    <span><strong>Key:</strong> Tên của biến môi trường (ví dụ: DATABASE_URL, API_KEY)</span>
                 </li>
                 <li class="flex items-start">
                     <i class="bi bi-card-text text-primary-500 mt-0.5 mr-2"></i>

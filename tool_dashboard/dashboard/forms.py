@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import inlineformset_factory
 from .models import Tool, EnvironmentVariable, ToolDependency
 
 class ToolForm(forms.ModelForm):
@@ -31,6 +32,19 @@ class EnvironmentVariableForm(forms.ModelForm):
     class Meta:
         model = EnvironmentVariable
         fields = ['key', 'value', 'is_secret']
+        widgets = {
+            'key': forms.TextInput(attrs={'class': 'form-control'}),
+            'value': forms.TextInput(attrs={'class': 'form-control'}),
+            'is_secret': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+EnvironmentVariableFormSet = inlineformset_factory(
+    Tool, 
+    EnvironmentVariable, 
+    form=EnvironmentVariableForm,
+    extra=1,
+    can_delete=True
+)
 
 class ToolDependencyForm(forms.ModelForm):
     dependent_tool = forms.ModelChoiceField(queryset=Tool.objects.all())
