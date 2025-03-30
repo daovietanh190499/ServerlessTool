@@ -12,6 +12,9 @@
         <a href="{% url 'script_editor' tool.slug %}" class="btn btn-outline-secondary">
             <i class="bi bi-code-slash"></i> Sửa Script
         </a>
+        <a href="{% url 'tool_delete' tool.slug %}" class="btn btn-outline-danger">
+            <i class="bi bi-trash"></i> Xóa
+        </a>
         {% if not tool.is_built %}
             <a href="{% url 'build_tool' tool.slug %}" class="btn btn-success">
                 <i class="bi bi-gear"></i> Build

@@ -326,6 +326,70 @@ def stop_tool(request, slug):
     
     return redirect('tool_detail', slug=tool.slug)
 
+def delete_tool(request, slug):
+    tool = get_object_or_404(Tool, slug=slug)
+    
+    if request.method == 'POST':
+        try:
+            # Nếu công cụ đang chạy, dừng nó trước
+            if tool.is_running:
+                try:
+                    # Tạo file tạm thời để lưu YAML
+                    with tempfile.NamedTemporaryFile(suffix='.yaml', delete=False) as temp_file:
+                        temp_file_path = temp_file.name
+                        
+                        # Đọc template YAML
+                        with open(os.path.join(settings.BASE_DIR, 'kubernetes/deployment_template.yaml'), 'r') as f:
+                            deployment_template = f.read()
+                        
+                        # Thay thế các biến trong template
+                        deployment_yaml = deployment_template.format(
+                            tool_slug=tool.slug,
+                            docker_image=tool.docker_image,
+                            env_vars=""
+                        )
+                        
+                        temp_file.write(deployment_yaml.encode())
+                    
+                    # Thực thi lệnh kubectl delete
+                    subprocess.run(
+                        ['kubectl', 'delete', '-f', temp_file_path],
+                        capture_output=True,
+                        text=True
+                    )
+                    
+                    # Xóa file tạm
+                    os.unlink(temp_file_path)
+                except Exception as e:
+                    # Ghi log lỗi nhưng vẫn tiếp tục xóa công cụ
+                    print(f"Lỗi khi dừng công cụ: {str(e)}")
+            
+            # Nếu có Docker image, xóa nó
+            if tool.docker_image:
+                try:
+                    subprocess.run(
+                        ['docker', 'rmi', tool.docker_image],
+                        capture_output=True,
+                        text=True
+                    )
+                except Exception as e:
+                    # Ghi log lỗi nhưng vẫn tiếp tục xóa công cụ
+                    print(f"Lỗi khi xóa Docker image: {str(e)}")
+            
+            # Lưu tên để hiển thị trong thông báo
+            tool_name = tool.name
+            
+            # Xóa công cụ
+            tool.delete()
+            
+            messages.success(request, f'Công cụ {tool_name} đã được xóa thành công')
+            return redirect('tool_list')
+        except Exception as e:
+            messages.error(request, f'Lỗi khi xóa công cụ: {str(e)}')
+            return redirect('tool_detail', slug=slug)
+    
+    return render(request, 'dashboard/tool_confirm_delete.html', {'tool': tool})
+
 # def deploy_tool(request, slug):
 #     tool = get_object_or_404(Tool, slug=slug)
     

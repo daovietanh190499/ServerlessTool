@@ -15,4 +15,5 @@ urlpatterns = [
     path('tool/<slug:slug>/deploy/', views.deploy_tool, name='deploy_tool'),
     path('api/update-build-status/', views.update_build_status, name='update_build_status'),
     path('tool/<slug:slug>/stop/', views.stop_tool, name='stop_tool'),
+    path('tool/<slug:slug>/delete/', views.delete_tool, name='tool_delete'),
 ] 

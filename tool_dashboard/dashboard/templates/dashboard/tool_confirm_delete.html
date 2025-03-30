@@ -1,0 +1,31 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Xóa {{ tool.name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Xác nhận xóa</h2>
+    </div>
+    <div class="card-body">
+        <p class="alert alert-danger">
+            Bạn có chắc chắn muốn xóa công cụ <strong>{{ tool.name }}</strong> không?
+        </p>
+        <p>Hành động này sẽ:</p>
+        <ul>
+            <li>Dừng công cụ nếu đang chạy</li>
+            <li>Xóa Docker image</li>
+            <li>Xóa tất cả dữ liệu liên quan đến công cụ này</li>
+        </ul>
+        <p class="text-danger"><strong>Lưu ý:</strong> Hành động này không thể hoàn tác!</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'tool_detail' tool.slug %}" class="btn btn-secondary">Hủy</a>
+                <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
