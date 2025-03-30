@@ -3,191 +3,530 @@
 {% block title %}{{ tool.name }}{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>{{ tool.name }}</h1>
-    <div>
-        <a href="{% url 'tool_update' tool.slug %}" class="btn btn-outline-primary">
-            <i class="bi bi-pencil"></i> Sửa
-        </a>
-        <a href="{% url 'script_editor' tool.slug %}" class="btn btn-outline-secondary">
-            <i class="bi bi-code-slash"></i> Sửa Script
-        </a>
-        <a href="{% url 'tool_delete' tool.slug %}" class="btn btn-outline-danger">
-            <i class="bi bi-trash"></i> Xóa
-        </a>
-        {% if not tool.is_built %}
-            <a href="{% url 'build_tool' tool.slug %}" class="btn btn-success">
-                <i class="bi bi-gear"></i> Build
-            </a>
-        {% elif not tool.is_running %}
-            <a href="{% url 'deploy_tool' tool.slug %}" class="btn btn-primary">
-                <i class="bi bi-play"></i> Chạy
-            </a>
-        {% else %}
-            <a href="{% url 'stop_tool' tool.slug %}" class="btn btn-danger">
-                <i class="bi bi-stop"></i> Dừng
-            </a>
-        {% endif %}
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-8">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Thông tin công cụ</h5>
-            </div>
-            <div class="card-body">
-                <p><strong>Mô tả:</strong> {{ tool.description|default:"Không có mô tả" }}</p>
-                <p><strong>Trạng thái:</strong> 
-                    {% if tool.is_built %}
-                        <span class="badge bg-success">Đã build</span>
-                    {% else %}
-                        <span class="badge bg-secondary">Chưa build</span>
-                    {% endif %}
-                    
+<div x-data="{ activeTab: 'info' }">
+    <!-- Tool header -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="px-6 py-5 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center">
+                <div class="h-12 w-12 flex items-center justify-center rounded-lg 
+                    {% if tool.is_running %}bg-green-100{% elif tool.is_built %}bg-blue-100{% else %}bg-gray-100{% endif %} mr-4">
                     {% if tool.is_running %}
-                        <span class="badge bg-primary">Đang chạy</span>
+                        <i class="bi bi-play-fill text-green-600 text-2xl"></i>
+                    {% elif tool.is_built %}
+                        <i class="bi bi-box text-blue-600 text-2xl"></i>
                     {% else %}
-                        <span class="badge bg-secondary">Chưa chạy</span>
+                        <i class="bi bi-code-slash text-gray-600 text-2xl"></i>
                     {% endif %}
-                </p>
-                <p><strong>Docker Image:</strong> {{ tool.docker_image|default:"Chưa có" }}</p>
-                <p><strong>Ngày tạo:</strong> {{ tool.created_at|date:"d/m/Y H:i" }}</p>
-                <p><strong>Cập nhật lần cuối:</strong> {{ tool.updated_at|date:"d/m/Y H:i" }}</p>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">{{ tool.name }}</h1>
+                    <div class="flex items-center mt-1">
+                        {% if tool.is_built %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mr-2">
+                                <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8">
+                                    <circle cx="4" cy="4" r="3" />
+                                </svg>
+                                Đã build
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mr-2">
+                                <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-gray-400" fill="currentColor" viewBox="0 0 8 8">
+                                    <circle cx="4" cy="4" r="3" />
+                                </svg>
+                                Chưa build
+                            </span>
+                        {% endif %}
+                        
+                        {% if tool.is_running %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-blue-400" fill="currentColor" viewBox="0 0 8 8">
+                                    <circle cx="4" cy="4" r="3" />
+                                </svg>
+                                Đang chạy
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-gray-400" fill="currentColor" viewBox="0 0 8 8">
+                                    <circle cx="4" cy="4" r="3" />
+                                </svg>
+                                Chưa chạy
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap gap-2">
+                <a href="{% url 'tool_update' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                    <i class="bi bi-pencil mr-2"></i> Sửa
+                </a>
+                <a href="{% url 'script_editor' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                    <i class="bi bi-code-slash mr-2"></i> Sửa Script
+                </a>
+                <a href="{% url 'tool_delete' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                    <i class="bi bi-trash mr-2"></i> Xóa
+                </a>
+                
+                {% if not tool.is_built %}
+                    <a href="{% url 'build_tool' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200">
+                        <i class="bi bi-gear mr-2"></i> Build
+                    </a>
+                {% elif not tool.is_running %}
+                    <a href="{% url 'deploy_tool' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                        <i class="bi bi-play mr-2"></i> Chạy
+                    </a>
+                {% else %}
+                    <a href="{% url 'stop_tool' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200">
+                        <i class="bi bi-stop mr-2"></i> Dừng
+                    </a>
+                {% endif %}
             </div>
         </div>
-
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>Script Python</h5>
-                <a href="{% url 'script_editor' tool.slug %}" class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-pencil"></i> Sửa
-                </a>
-            </div>
-            <div class="card-body">
-                <pre class="bg-light p-3 rounded"><code>{{ tool.python_script|default:"# Chưa có script" }}</code></pre>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>Requirements</h5>
-                <a href="{% url 'tool_update' tool.slug %}" class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-pencil"></i> Sửa
-                </a>
-            </div>
-            <div class="card-body">
-                <pre class="bg-light p-3 rounded"><code>{{ tool.requirements|default:"# Chưa có requirements" }}</code></pre>
-            </div>
+        
+        <!-- Tabs -->
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+                <button @click="activeTab = 'info'" :class="{'border-primary-500 text-primary-600': activeTab === 'info', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'info'}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    <i class="bi bi-info-circle mr-2"></i> Thông tin
+                </button>
+                <button @click="activeTab = 'script'" :class="{'border-primary-500 text-primary-600': activeTab === 'script', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'script'}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    <i class="bi bi-code-slash mr-2"></i> Script
+                </button>
+                <button @click="activeTab = 'env'" :class="{'border-primary-500 text-primary-600': activeTab === 'env', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'env'}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    <i class="bi bi-gear mr-2"></i> Biến môi trường
+                </button>
+                <button @click="activeTab = 'dependencies'" :class="{'border-primary-500 text-primary-600': activeTab === 'dependencies', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'dependencies'}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    <i class="bi bi-diagram-3 mr-2"></i> Phụ thuộc
+                </button>
+                <button @click="activeTab = 'logs'" :class="{'border-primary-500 text-primary-600': activeTab === 'logs', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'logs'}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    <i class="bi bi-journal-text mr-2"></i> Logs
+                </button>
+            </nav>
         </div>
     </div>
-
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>Biến môi trường</h5>
-                <a href="{% url 'manage_env_vars' tool.slug %}" class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-pencil"></i> Quản lý
+    
+    <!-- Tab content -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <!-- Info tab -->
+        <div x-show="activeTab === 'info'" class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                        <i class="bi bi-info-circle mr-2 text-primary-500"></i>
+                        Thông tin cơ bản
+                    </h3>
+                    
+                    <dl class="grid grid-cols-1 gap-x-4 gap-y-6">
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Mô tả</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ tool.description|default:"Không có mô tả" }}</dd>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Docker Image</dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                {% if tool.docker_image %}
+                                    <span class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">{{ tool.docker_image }}</span>
+                                {% else %}
+                                    <span class="text-gray-500">Chưa có</span>
+                                {% endif %}
+                            </dd>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Ngày tạo</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ tool.created_at|date:"d/m/Y H:i" }}</dd>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">Cập nhật lần cuối</dt>
+                            <dd class="mt-1 text-sm text-gray-900">{{ tool.updated_at|date:"d/m/Y H:i" }}</dd>
+                        </div>
+                    </dl>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                        <i class="bi bi-list-check mr-2 text-primary-500"></i>
+                        Requirements
+                    </h3>
+                    
+                    <div class="relative">
+                        <div class="absolute top-0 right-0 m-2">
+                            <a href="{% url 'tool_update' tool.slug %}" class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </div>
+                        <pre class="bg-gray-50 p-4 rounded-md border border-gray-200 text-sm text-gray-800 font-mono overflow-x-auto max-h-60">{{ tool.requirements|default:"# Chưa có requirements" }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Script tab -->
+        <div x-show="activeTab === 'script'" class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <i class="bi bi-code-slash mr-2 text-primary-500"></i>
+                    Script Python
+                </h3>
+                <a href="{% url 'script_editor' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                    <i class="bi bi-pencil mr-2"></i> Sửa Script
                 </a>
             </div>
-<div class="card-body">
-                {% if env_vars %}
-                    <table class="table table-sm">
-                        <thead>
+            
+            <pre class="bg-gray-800 text-gray-200 p-4 rounded-md shadow-inner overflow-x-auto max-h-96 font-mono text-sm">{{ tool.python_script|default:"# Chưa có script" }}</pre>
+            
+            <div class="mt-6 bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-md">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-info-circle text-blue-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                            Script phải chứa một hàm <code class="bg-blue-100 px-1.5 py-0.5 rounded text-blue-800 font-mono text-xs">process(input_data)</code> nhận một tham số đầu vào và trả về kết quả.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Environment variables tab -->
+        <div x-show="activeTab === 'env'" class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <i class="bi bi-gear mr-2 text-primary-500"></i>
+                    Biến môi trường
+                </h3>
+                <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                    <i class="bi bi-pencil mr-2"></i> Quản lý
+                </a>
+            </div>
+            
+            {% if env_vars %}
+                <div class="overflow-x-auto shadow border-b border-gray-200 rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
                             <tr>
-                                <th>Key</th>
-                                <th>Value</th>
-                                <th>Bảo mật</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Bảo mật</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="bg-white divide-y divide-gray-200">
                             {% for env in env_vars %}
-                                <tr>
-                                    <td>{{ env.key }}</td>
-                                    <td>
+                                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <span class="font-mono">{{ env.key }}</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {% if env.is_secret %}
-                                            ********
+                                            <span class="font-mono">••••••••</span>
                                         {% else %}
-                                            {{ env.value }}
+                                            <span class="font-mono">{{ env.value }}</span>
                                         {% endif %}
                                     </td>
-                                    <td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                         {% if env.is_secret %}
-                                            <i class="bi bi-lock-fill text-success"></i>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <i class="bi bi-lock-fill mr-1"></i> Bảo mật
+                                            </span>
                                         {% else %}
-                                            <i class="bi bi-unlock text-secondary"></i>
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                <i class="bi bi-unlock mr-1"></i> Công khai
+                                            </span>
                                         {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                {% else %}
-                    <p class="text-muted">Chưa có biến môi trường nào</p>
-                {% endif %}
-            </div>
+                </div>
+            {% else %}
+                <div class="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có biến môi trường</h3>
+                    <p class="mt-1 text-sm text-gray-500">Thêm biến môi trường để cấu hình ứng dụng của bạn.</p>
+                    <div class="mt-6">
+                        <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <i class="bi bi-plus-lg mr-2"></i> Thêm biến môi trường
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>Công cụ phụ thuộc</h5>
-                <a href="{% url 'manage_dependencies' tool.slug %}" class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-pencil"></i> Quản lý
+        
+        <!-- Dependencies tab -->
+        <div x-show="activeTab === 'dependencies'" class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <i class="bi bi-diagram-3 mr-2 text-primary-500"></i>
+                    Công cụ phụ thuộc
+                </h3>
+                <a href="{% url 'manage_dependencies' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                    <i class="bi bi-pencil mr-2"></i> Quản lý
                 </a>
             </div>
-            <div class="card-body">
-                {% if dependencies %}
-                    <ul class="list-group">
-                        {% for dep in dependencies %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ dep.dependent_tool.name }}
-                                <a href="{% url 'remove_dependency' dep.id %}" class="btn btn-sm btn-outline-danger">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="text-muted">Chưa có công cụ phụ thuộc nào</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Build Logs</h5>
-            </div>
-            <div class="card-body">
-                {% if build_logs %}
-                    <div class="accordion" id="buildLogsAccordion">
-                        {% for log in build_logs %}
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#buildLog{{ log.id }}">
-                                        {{ log.timestamp|date:"d/m/Y H:i" }} - 
-                                        {% if log.status == 'success' %}
-                                            <span class="badge bg-success ms-2">Thành công</span>
-                                        {% elif log.status == 'error' %}
-                                            <span class="badge bg-danger ms-2">Lỗi</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary ms-2">{{ log.status }}</span>
-                                        {% endif %}
-                                    </button>
-                                </h2>
-                                <div id="buildLog{{ log.id }}" class="accordion-collapse collapse" data-bs-parent="#buildLogsAccordion">
-                                    <div class="accordion-body">
-                                        <pre class="bg-light p-2 rounded"><code>{{ log.log }}</code></pre>
+            
+            {% if dependencies %}
+                <ul class="divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden">
+                    {% for dep in dependencies %}
+                        <li class="px-6 py-4 bg-white hover:bg-gray-50 transition-colors duration-150">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 rounded-md bg-primary-100 flex items-center justify-center mr-3">
+                                        <i class="bi bi-tools text-primary-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-900">{{ dep.dependent_tool.name }}</h4>
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            {% if dep.dependent_tool.is_running %}
+                                                <span class="inline-flex items-center text-green-600">
+                                                    <i class="bi bi-circle-fill text-xs mr-1"></i> Đang chạy
+                                                </span>
+                                            {% else %}
+                                                <span class="inline-flex items-center text-gray-500">
+                                                    <i class="bi bi-circle text-xs mr-1"></i> Chưa chạy
+                                                </span>
+                                            {% endif %}
+                                        </p>
                                     </div>
                                 </div>
+                                <a href="{% url 'tool_detail' dep.dependent_tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                                    <i class="bi bi-box-arrow-up-right mr-1"></i> Xem
+                                </a>
                             </div>
-                        {% endfor %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có công cụ phụ thuộc</h3>
+                    <p class="mt-1 text-sm text-gray-500">Thêm công cụ phụ thuộc để đảm bảo chúng được chạy trước khi công cụ này được triển khai.</p>
+                    <div class="mt-6">
+                        <a href="{% url 'manage_dependencies' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <i class="bi bi-plus-lg mr-2"></i> Thêm phụ thuộc
+                        </a>
                     </div>
-                {% else %}
-                    <p class="text-muted">Chưa có build logs</p>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Logs tab -->
+        <div x-show="activeTab === 'logs'" class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                <i class="bi bi-journal-text mr-2 text-primary-500"></i>
+                Build Logs
+            </h3>
+            
+            {% if build_logs %}
+                <div class="space-y-4">
+                    {% for log in build_logs %}
+                        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm" x-data="{ open: false }">
+                            <div @click="open = !open" class="px-4 py-3 bg-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-100 transition-colors duration-150">
+                                <div class="flex items-center">
+                                    <span class="text-sm font-medium text-gray-900">{{ log.timestamp|date:"d/m/Y H:i" }}</span>
+                                    {% if log.status == 'success' %}
+                                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <i class="bi bi-check-circle mr-1"></i> Thành công
+                                        </span>
+                                    {% elif log.status == 'error' %}
+                                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <i class="bi bi-x-circle mr-1"></i> Lỗi
+                                        </span>
+                                    {% else %}
+                                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            {{ log.status }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <i class="bi" :class="open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                            </div>
+                            <div x-show="open" x-collapse>
+                                <div class="p-4 bg-gray-800 overflow-x-auto">
+                                    <pre class="text-gray-200 text-sm font-mono whitespace-pre-wrap">{{ log.log }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có build logs</h3>
+                    <p class="mt-1 text-sm text-gray-500">Build công cụ để tạo logs.</p>
+                    {% if not tool.is_built %}
+                        <div class="mt-6">
+                            <a href="{% url 'build_tool' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                <i class="bi bi-gear mr-2"></i> Build Tool
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
-{% endblock %} 
+        <!-- Script tab -->
+        <div x-show="activeTab === 'script'" class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <i class="bi bi-code-slash mr-2 text-primary-500"></i>
+                    Script Python
+                </h3>
+                <a href="{% url 'script_editor' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                    <i class="bi bi-pencil mr-2"></i> Sửa
+                </a>
+            </div>
+            
+            {% if tool.python_script %}
+                <div class="bg-gray-800 rounded-lg overflow-hidden shadow-sm">
+                    <div class="flex items-center justify-between px-4 py-2 bg-gray-900">
+                        <div class="flex items-center">
+                            <svg class="h-5 w-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                            </svg>
+                            <span class="text-gray-200 text-sm font-medium">Python Script</span>
+                        </div>
+                        <div class="flex space-x-1">
+                            <div class="h-3 w-3 rounded-full bg-red-500"></div>
+                            <div class="h-3 w-3 rounded-full bg-yellow-500"></div>
+                            <div class="h-3 w-3 rounded-full bg-green-500"></div>
+                        </div>
+                    </div>
+                    <div class="p-4 overflow-x-auto">
+                        <pre class="text-gray-200 text-sm font-mono"><code>{{ tool.python_script }}</code></pre>
+                    </div>
+                </div>
+            {% else %}
+                <div class="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có script</h3>
+                    <p class="mt-1 text-sm text-gray-500">Thêm script Python để xác định chức năng của công cụ.</p>
+                    <div class="mt-6">
+                        <a href="{% url 'script_editor' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <i class="bi bi-code-slash mr-2"></i> Tạo Script
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="mt-6 bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                    <h4 class="text-sm font-medium text-gray-900">Hướng dẫn viết script</h4>
+                </div>
+                <div class="p-4">
+                    <div class="prose prose-sm max-w-none text-gray-500">
+                        <p>Script Python của bạn phải chứa một hàm <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process(input_data)</code> nhận một tham số đầu vào và trả về kết quả.</p>
+                        
+                        <h5 class="text-gray-700 font-medium mt-4">Ví dụ:</h5>
+                        <pre class="bg-gray-50 p-3 rounded-md overflow-x-auto text-xs border border-gray-200"><code>def process(input_data):
+    """
+    Hàm xử lý dữ liệu đầu vào và trả về kết quả.
+    
+    Args:
+        input_data: Dữ liệu đầu vào (có thể là string, dict, list, ...)
+        
+    Returns:
+        Kết quả xử lý (có thể là string, dict, list, ...)
+    """
+    # Xử lý dữ liệu đầu vào
+    result = input_data.upper()  # Chuyển đổi thành chữ hoa
+    
+    return result</code></pre>
+                        
+                        <h5 class="text-gray-700 font-medium mt-4">Lưu ý:</h5>
+                        <ul class="mt-2 space-y-1">
+                            <li class="flex items-start">
+                                <i class="bi bi-check-circle text-green-500 mt-0.5 mr-2"></i>
+                                <span>Bạn có thể import các thư viện Python tiêu chuẩn và các thư viện được liệt kê trong requirements.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="bi bi-check-circle text-green-500 mt-0.5 mr-2"></i>
+                                <span>Biến môi trường có thể được truy cập thông qua <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">os.environ</code>.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="bi bi-exclamation-triangle text-yellow-500 mt-0.5 mr-2"></i>
+                                <span>Đảm bảo xử lý các lỗi một cách an toàn để tránh crash ứng dụng.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Environment Variables tab -->
+        <div x-show="activeTab === 'env'" class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <i class="bi bi-gear mr-2 text-primary-500"></i>
+                    Biến môi trường
+                </h3>
+                <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                    <i class="bi bi-pencil mr-2"></i> Quản lý
+                </a>
+            </div>
+            
+            {% if env_vars %}
+                <div class="overflow-x-auto border border-gray-200 rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Bảo mật</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for env in env_vars %}
+                                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        <span class="font-mono">{{ env.key }}</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {% if env.is_secret %}
+                                            <span class="font-mono">••••••••</span>
+                                        {% else %}
+                                            <span class="font-mono">{{ env.value }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                        {% if env.is_secret %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <i class="bi bi-lock-fill mr-1"></i> Bảo mật
+                                            </span>
+                                        {% else %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                <i class="bi bi-unlock mr-1"></i> Công khai
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có biến môi trường</h3>
+                    <p class="mt-1 text-sm text-gray-500">Thêm biến môi trường để cấu hình ứng dụng của bạn.</p>
+                    <div class="mt-6">
+                        <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                            <i class="bi bi-plus-lg mr-2"></i> Thêm biến môi trường
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

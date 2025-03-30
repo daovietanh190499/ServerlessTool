@@ -5,32 +5,117 @@
 {% block extra_css %}
 <style>
     #editor {
-        min-height: 500px;
+        min-height: 600px;
         width: 100%;
-        border: 1px solid #ddd;
+        border-radius: 0.375rem;
+        overflow: hidden;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h2>Soạn thảo Script - {{ tool.name }}</h2>
-        <a href="{% url 'tool_detail' tool.slug %}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Quay lại
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-primary-50 to-white">
+        <h2 class="text-xl font-bold text-gray-900 flex items-center">
+            <i class="bi bi-code-slash mr-2 text-primary-500"></i>
+            Soạn thảo Script - {{ tool.name }}
+        </h2>
+        <a href="{% url 'tool_detail' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+            <i class="bi bi-arrow-left mr-2"></i> Quay lại
         </a>
     </div>
-    <div class="card-body">
+    
+    <div class="p-6">
         <form method="post" id="scriptForm">
             {% csrf_token %}
-            <div id="editor">{{ tool.python_script|default:"# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result" }}</div>
-            <input type="hidden" name="script_content" id="script_content">
             
-            <div class="mt-3 d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'tool_detail' tool.slug %}'">Hủy</button>
-                <button type="submit" class="btn btn-primary">Lưu Script</button>
+            <div class="mb-6">
+                <div id="editor" class="shadow-sm border border-gray-200">{{ tool.python_script|default:"# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result" }}</div>
+                <input type="hidden" name="script_content" id="script_content">
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 pt-0.5">
+                        <i class="bi bi-info-circle text-primary-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-gray-900">Hướng dẫn</h3>
+                        <div class="mt-2 text-sm text-gray-500">
+                            <p>Script của bạn phải chứa một hàm <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process(input_data)</code> nhận một tham số đầu vào và trả về kết quả.</p>
+                            <p class="mt-1">Ví dụ:</p>
+                            <pre class="mt-2 p-3 bg-gray-800 text-gray-200 rounded-md overflow-x-auto text-xs"><code>def process(input_data):
+    # Xử lý dữ liệu đầu vào
+    result = input_data.upper()  # Chuyển đổi thành chữ hoa
+    return result</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+                <div class="flex items-center text-sm text-gray-500">
+                    <i class="bi bi-keyboard mr-1"></i>
+                    <span>Nhấn <kbd class="px-2 py-1 bg-gray-100 border border-gray-300 rounded text-xs">Ctrl</kbd> + <kbd class="px-2 py-1 bg-gray-100 border border-gray-300 rounded text-xs">S</kbd> để lưu</span>
+                </div>
+                <div class="flex space-x-3">
+                    <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200" onclick="window.location.href='{% url 'tool_detail' tool.slug %}'">
+                        <i class="bi bi-x mr-2"></i> Hủy
+                    </button>
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                        <i class="bi bi-save mr-2"></i> Lưu Script
+                    </button>
+                </div>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Features section -->
+<div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Syntax highlighting -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-white">
+            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                <i class="bi bi-braces mr-2 text-indigo-500"></i>
+                Tô màu cú pháp
+            </h3>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-500 text-sm">
+                Trình soạn thảo hỗ trợ tô màu cú pháp Python, giúp bạn dễ dàng đọc và viết mã.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Auto-completion -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-white">
+            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                <i class="bi bi-lightning-charge mr-2 text-purple-500"></i>
+                Tự động hoàn thành
+            </h3>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-500 text-sm">
+                Gợi ý thông minh và tự động hoàn thành mã giúp bạn viết mã nhanh hơn và giảm lỗi.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Error checking -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-white">
+            <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                <i class="bi bi-check-circle mr-2 text-green-500"></i>
+                Kiểm tra lỗi
+            </h3>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-500 text-sm">
+                Kiểm tra lỗi cú pháp trong thời gian thực giúp bạn phát hiện và sửa lỗi nhanh chóng.
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -44,12 +129,35 @@
             value: document.getElementById('editor').textContent,
             language: 'python',
             theme: 'vs-dark',
-            automaticLayout: true
+            automaticLayout: true,
+            minimap: { enabled: true },
+            scrollBeyondLastLine: false,
+            fontSize: 14,
+            lineNumbers: 'on',
+            renderLineHighlight: 'all',
+            roundedSelection: true,
+            selectOnLineNumbers: true,
+            wordWrap: 'on',
+            suggestOnTriggerCharacters: true,
+            quickSuggestions: true,
+            tabSize: 4,
+            insertSpaces: true
         });
         
         document.getElementById('scriptForm').addEventListener('submit', function() {
             document.getElementById('script_content').value = editor.getValue();
         });
+        
+        // Add keyboard shortcut for saving
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, function() {
+            document.getElementById('script_content').value = editor.getValue();
+            document.getElementById('scriptForm').submit();
+        });
+        
+        // Focus editor
+        setTimeout(function() {
+            editor.focus();
+        }, 500);
     });
 </script>
 {% endblock %} 

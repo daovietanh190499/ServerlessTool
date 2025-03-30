@@ -3,69 +3,132 @@
 {% block title %}Quản lý biến môi trường - {{ tool.name }}{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h2>Quản lý biến môi trường - {{ tool.name }}</h2>
-        <a href="{% url 'tool_detail' tool.slug %}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Quay lại
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-primary-50 to-white">
+        <h2 class="text-xl font-bold text-gray-900 flex items-center">
+            <i class="bi bi-gear-fill mr-2 text-primary-500"></i>
+            Quản lý biến môi trường - {{ tool.name }}
+        </h2>
+        <a href="{% url 'tool_detail' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+            <i class="bi bi-arrow-left mr-2"></i> Quay lại
         </a>
     </div>
-    <div class="card-body">
+    
+    <div class="p-6">
         <form method="post">
             {% csrf_token %}
             {{ formset.management_form }}
             
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Key</th>
-                        <th>Value</th>
-                        <th>Bảo mật</th>
-                        <th>Xóa</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for form in formset %}
-                        <tr class="formset-row">
-                            <td>
-                                {{ form.id }}
-                                {{ form.key.errors }}
-                                <input type="text" name="{{ form.key.name }}" value="{{ form.key.value|default:'' }}" 
-                                       class="form-control {% if form.key.errors %}is-invalid{% endif %}" 
-                                       placeholder="KEY_NAME">
-                            </td>
-                            <td>
-                                {{ form.value.errors }}
-                                <input type="text" name="{{ form.value.name }}" value="{{ form.value.value|default:'' }}" 
-                                       class="form-control {% if form.value.errors %}is-invalid{% endif %}" 
-                                       placeholder="value">
-                            </td>
-                            <td class="text-center">
-                                <div class="form-check">
-                                    <input type="checkbox" name="{{ form.is_secret.name }}" 
-                                           {% if form.is_secret.value %}checked{% endif %} 
-                                           class="form-check-input" id="{{ form.is_secret.id_for_label }}">
-                                </div>
-                            </td>
-                            <td>
-                                {% if form.instance.pk %}
-                                    <div class="form-check">
-                                        <input type="checkbox" name="{{ form.DELETE.name }}" 
-                                               class="form-check-input" id="{{ form.DELETE.id_for_label }}">
-                                        <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">Xóa</label>
-                                    </div>
-                                {% endif %}
-                            </td>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
+                            <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                            <th scope="col" class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Bảo mật</th>
+                            <th scope="col" class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Xóa</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for form in formset %}
+                            <tr class="formset-row hover:bg-gray-50 transition-colors duration-150">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ form.id }}
+                                    {{ form.key.errors }}
+                                    <input type="text" name="{{ form.key.name }}" value="{{ form.key.value|default:'' }}" 
+                                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.key.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
+                                           placeholder="KEY_NAME">
+                                    {% if form.key.errors %}
+                                        <p class="mt-2 text-sm text-red-600">{{ form.key.errors.0 }}</p>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ form.value.errors }}
+                                    <input type="text" name="{{ form.value.name }}" value="{{ form.value.value|default:'' }}" 
+                                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.value.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
+                                           placeholder="value">
+                                    {% if form.value.errors %}
+                                        <p class="mt-2 text-sm text-red-600">{{ form.value.errors.0 }}</p>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <div class="flex items-center justify-center">
+                                        <input type="checkbox" name="{{ form.is_secret.name }}" 
+                                               {% if form.is_secret.value %}checked{% endif %} 
+                                               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded transition-colors duration-150" 
+                                               id="{{ form.is_secret.id_for_label }}">
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    {% if form.instance.pk %}
+                                        <div class="flex items-center justify-center">
+                                            <input type="checkbox" name="{{ form.DELETE.name }}" 
+                                                   class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded transition-colors duration-150" 
+                                                   id="{{ form.DELETE.id_for_label }}">
+                                            <label class="ml-2 text-sm text-gray-700" for="{{ form.DELETE.id_for_label }}">Xóa</label>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             
-            <div class="d-flex justify-content-between mt-3">
-                <a href="{% url 'tool_detail' tool.slug %}" class="btn btn-secondary">Hủy</a>
-                <button type="submit" class="btn btn-primary">Lưu biến môi trường</button>
+            <div class="flex justify-between items-center mt-6 pt-6 border-t border-gray-200">
+                <a href="{% url 'tool_detail' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                    <i class="bi bi-x mr-2"></i> Hủy
+                </a>
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                    <i class="bi bi-save mr-2"></i> Lưu biến môi trường
+                </button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Help section -->
+<div class="mt-6 bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
+        <h3 class="text-lg font-medium text-gray-900 flex items-center">
+            <i class="bi bi-info-circle mr-2 text-blue-500"></i>
+            Thông tin về biến môi trường
+        </h3>
+    </div>
+    <div class="p-6">
+        <div class="prose prose-sm max-w-none text-gray-500">
+            <p>Biến môi trường cho phép bạn cấu hình ứng dụng mà không cần thay đổi mã nguồn. Chúng được truyền vào container khi ứng dụng được triển khai.</p>
+            
+            <h4 class="text-gray-700 font-medium mt-4">Hướng dẫn:</h4>
+            <ul class="mt-2 space-y-2">
+                <li class="flex items-start">
+                    <i class="bi bi-key text-primary-500 mt-0.5 mr-2"></i>
+                    <span><strong>Key:</strong> Tên biến môi trường (ví dụ: DATABASE_URL, API_KEY)</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="bi bi-card-text text-primary-500 mt-0.5 mr-2"></i>
+                    <span><strong>Value:</strong> Giá trị của biến môi trường</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="bi bi-shield-lock text-primary-500 mt-0.5 mr-2"></i>
+                    <span><strong>Bảo mật:</strong> Đánh dấu biến môi trường là bảo mật nếu nó chứa thông tin nhạy cảm (ví dụ: mật khẩu, khóa API)</span>
+                </li>
+            </ul>
+            
+            <div class="mt-4 p-4 bg-yellow-50 rounded-md border border-yellow-200">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-exclamation-triangle text-yellow-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h5 class="text-sm font-medium text-yellow-800">Lưu ý quan trọng</h5>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>Các biến môi trường được đánh dấu là bảo mật sẽ được lưu trữ an toàn và không hiển thị trong giao diện. Hãy đảm bảo đánh dấu tất cả thông tin nhạy cảm là bảo mật.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %} 
