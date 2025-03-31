@@ -156,3 +156,7 @@ KUBERNETES_NAMESPACE = os.environ.get('KUBERNETES_NAMESPACE', 'tools')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'dashboard.User'
+LOGOUT_REDIRECT_URL = 'landing'
+LOGIN_REDIRECT_URL = 'landing'

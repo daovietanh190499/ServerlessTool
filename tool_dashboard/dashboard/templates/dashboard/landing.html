@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero min-h-[70vh] bg-gradient-to-br from-base-200 to-base-300">
+    <div class="hero-content text-center">
+        <div class="max-w-3xl">
+            <div class="flex justify-center mb-8">
+                <div class="w-24 h-24 bg-primary rounded-full flex items-center justify-center">
+                    <svg class="w-12 h-12 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+            </div>
+            <h1 class="text-5xl font-bold mb-6">Serverless Tool Platform</h1>
+            <p class="py-6 text-xl text-gray-600">Create, deploy, and manage your serverless tools with ease. Our platform provides everything you need to build and deploy serverless applications efficiently.</p>
+            {% if not user.is_authenticated %}
+            <div class="flex gap-4 justify-center">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Get Started</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary btn-lg">Create Account</a>
+            </div>
+            {% else %}
+            <div class="flex gap-4 justify-center">
+                <a href="{% url 'tool_list' %}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                <a href="{% url 'logout' %}" class="btn btn-ghost btn-lg">Logout</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div id="features" class="py-20 bg-base-100">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4">Our Services</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Choose from our range of powerful serverless tools and services to build your next project</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Tool Dashboard Card -->
+            <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+                <div class="card-body">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="card-title text-2xl mb-4">Tool Dashboard</h3>
+                    <p class="text-gray-600 mb-6">Manage and deploy your serverless tools with our intuitive dashboard interface.</p>
+                    {% if user.is_authenticated %}
+                    <div class="card-actions justify-end">
+                        <a href="{% url 'tool_list' %}" class="btn btn-primary">Access Dashboard</a>
+                    </div>
+                    {% else %}
+                    <div class="card-actions justify-end">
+                        <a href="{% url 'login' %}" class="btn btn-primary">Login to Access</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- API Management Card -->
+            <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+                <div class="card-body">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="card-title text-2xl mb-4">API Management</h3>
+                    <p class="text-gray-600 mb-6">Create and manage your serverless APIs with our comprehensive API management system.</p>
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-primary" disabled>Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Function Hub Card -->
+            <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+                <div class="card-body">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </div>
+                    <h3 class="card-title text-2xl mb-4">Function Hub</h3>
+                    <p class="text-gray-600 mb-6">Browse and deploy pre-built serverless functions from our extensive library.</p>
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-primary" disabled>Coming Soon</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div id="how-it-works" class="py-20 bg-base-200">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4">How It Works</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Get started with our platform in four simple steps</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-3xl font-bold text-white">1</span>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Create Account</h3>
+                <p class="text-gray-600">Sign up for free and get started in minutes</p>
+            </div>
+            <div class="text-center">
+                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-3xl font-bold text-white">2</span>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Choose Service</h3>
+                <p class="text-gray-600">Select the service that best fits your needs</p>
+            </div>
+            <div class="text-center">
+                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-3xl font-bold text-white">3</span>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Configure</h3>
+                <p class="text-gray-600">Set up your tools and environment variables</p>
+            </div>
+            <div class="text-center">
+                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-3xl font-bold text-white">4</span>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Deploy</h3>
+                <p class="text-gray-600">Deploy your tools and monitor their performance</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Why Choose Us Section -->
+<div id="why-choose-us" class="py-20 bg-base-100">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4">Why Choose Us?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Discover what makes our platform the perfect choice for your serverless needs</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title text-xl">User-Friendly Interface</h3>
+                    </div>
+                    <p class="text-gray-600">Our intuitive dashboard makes it easy to manage your serverless tools without any technical expertise.</p>
+                </div>
+            </div>
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title text-xl">Secure & Reliable</h3>
+                    </div>
+                    <p class="text-gray-600">Your tools are deployed on secure infrastructure with high availability and performance.</p>
+                </div>
+            </div>
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title text-xl">Cost-Effective</h3>
+                    </div>
+                    <p class="text-gray-600">Pay only for what you use with our flexible pricing model.</p>
+                </div>
+            </div>
+            <div class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="card-title text-xl">24/7 Support</h3>
+                    </div>
+                    <p class="text-gray-600">Our dedicated support team is always ready to help you with any issues.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action Section -->
+{% if not user.is_authenticated %}
+<div class="bg-primary text-primary-content py-20">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-8">Ready to Get Started?</h2>
+        <p class="mb-8 text-lg">Create an account and start building your serverless tools today</p>
+        <a href="{% url 'register' %}" class="btn btn-secondary btn-lg">Sign Up Now</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %} 

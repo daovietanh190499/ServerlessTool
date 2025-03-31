@@ -6,6 +6,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.forms import inlineformset_factory
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 
 from .models import Tool, EnvironmentVariable, ToolDependency, BuildLog, DeploymentLog
 from .forms import ToolForm, EnvironmentVariableForm, EnvironmentVariableFormSet, ToolDependencyForm
@@ -529,4 +533,25 @@ def update_build_status(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
     
-    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}) 
+    return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
+
+def landing_page(request):
+    return render(request, 'dashboard/landing.html')
+
+class CustomLoginView(LoginView):
+    template_name = 'dashboard/login.html'
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy('tool_list')
+
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'dashboard/register.html'
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = form.save()
+        login(self.request, user)
+        return response 
