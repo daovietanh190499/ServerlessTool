@@ -14,7 +14,7 @@ def landing_page(request):
 
 def logout_view(request):
     logout(request)
-    messages.success(request, 'Successfully logged out!')
+    messages.success(request, '👋 See you again! You have been successfully logged out.')
     return redirect('landing')
 
 class UnauthenticatedUserMixin(UserPassesTestMixin):
@@ -23,20 +23,26 @@ class UnauthenticatedUserMixin(UserPassesTestMixin):
 
 class CustomLoginView(UnauthenticatedUserMixin, LoginView):
     template_name = 'dashboard/login.html'
-    redirect_authenticated_user = False
+    redirect_authenticated_user = True
     form_class = AuthenticationForm
 
     def get_success_url(self):
-        messages.success(self.request, 'Successfully logged in!')
-        return reverse_lazy('landing')
+        messages.success(self.request, '🎉 Welcome back! You have successfully logged in.')
+        next_url = self.request.GET.get('next')
+        if next_url:
+            return next_url
+        return reverse_lazy('tool_list')
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Invalid email or password.')
+        messages.error(self.request, '❌ Oops! The email or password you entered is incorrect. Please try again.')
         return super().form_invalid(form)
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Successfully logged in!')
+        # Add cache control headers to prevent back button issues
+        response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response['Pragma'] = 'no-cache'
+        response['Expires'] = '0'
         return response
 
 class RegisterView(UnauthenticatedUserMixin, CreateView):
@@ -47,14 +53,14 @@ class RegisterView(UnauthenticatedUserMixin, CreateView):
     def form_valid(self, form):
         try:
             user = form.save()
-            messages.success(self.request, 'Account created successfully! Please log in.')
+            messages.success(self.request, '✨ Awesome! Your account has been created successfully. Please log in to continue.')
             return redirect('login')
         except Exception as e:
-            messages.error(self.request, f'Error creating account: {str(e)}')
+            messages.error(self.request, f'❌ Something went wrong: {str(e)}')
             return self.form_invalid(form)
 
     def form_invalid(self, form):
         for field, errors in form.errors.items():
             for error in errors:
-                messages.error(self.request, f"{field}: {error}")
+                messages.error(self.request, f'❌ {field.title()}: {error}')
         return super().form_invalid(form) 

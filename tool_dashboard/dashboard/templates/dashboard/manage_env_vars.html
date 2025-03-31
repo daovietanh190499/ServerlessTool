@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Quản lý biến môi trường - {{ tool.name }}{% endblock %}
 
@@ -90,29 +90,38 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="key" class="block text-sm font-medium text-gray-700">Key <span class="text-red-500">*</span></label>
-                        <div class="mt-1">
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="bi bi-key text-gray-400"></i>
+                            </div>
                             <input type="text" name="key" id="key" required
-                                   class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                   placeholder="DATABASE_URL">
+                                   class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                   placeholder="DATABASE_URL, API_KEY, etc.">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">Tên biến môi trường (chỉ chữ cái, số và dấu gạch dưới)</p>
                     </div>
                     <div>
                         <label for="value" class="block text-sm font-medium text-gray-700">Value <span class="text-red-500">*</span></label>
-                        <div class="mt-1">
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="bi bi-card-text text-gray-400"></i>
+                            </div>
                             <input type="text" name="value" id="value" required
-                                   class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                   class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                                    placeholder="postgres://user:password@localhost:5432/db">
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">Giá trị của biến môi trường</p>
                     </div>
                 </div>
-                <div class="flex items-center">
+                <div class="flex items-center space-x-2">
                     <input type="checkbox" name="is_secret" id="is_secret" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                    <label for="is_secret" class="ml-2 block text-sm text-gray-700">
+                    <label for="is_secret" class="flex items-center text-sm text-gray-700">
+                        <i class="bi bi-shield-lock text-primary-500 mr-1"></i>
                         Đánh dấu là biến bảo mật (giá trị sẽ được ẩn)
                     </label>
                 </div>
-                <div>
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <div class="flex justify-end">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                         <i class="bi bi-plus-lg mr-2"></i> Thêm biến môi trường
                     </button>
                 </div>
