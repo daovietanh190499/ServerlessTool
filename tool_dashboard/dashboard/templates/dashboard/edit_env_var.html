@@ -1,4 +1,4 @@
-{% extends 'dashboard/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Sửa biến môi trường - {{ tool.name }}{% endblock %}
 
@@ -23,28 +23,37 @@
             {% endfor %}
         {% endif %}
         
-        <form method="post" class="space-y-4">
+        <form method="post" class="space-y-6">
             {% csrf_token %}
             <div>
                 <label for="key" class="block text-sm font-medium text-gray-700">Key <span class="text-red-500">*</span></label>
-                <div class="mt-1">
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="bi bi-key text-gray-400"></i>
+                    </div>
                     <input type="text" name="key" id="key" required
-                           class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                           class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                            value="{{ env_var.key }}">
                 </div>
+                <p class="mt-1 text-xs text-gray-500">Tên biến môi trường (chỉ chữ cái, số và dấu gạch dưới)</p>
             </div>
             <div>
                 <label for="value" class="block text-sm font-medium text-gray-700">Value <span class="text-red-500">*</span></label>
-                <div class="mt-1">
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="bi bi-card-text text-gray-400"></i>
+                    </div>
                     <input type="text" name="value" id="value" required
-                           class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                           class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                            value="{{ env_var.value }}">
                 </div>
+                <p class="mt-1 text-xs text-gray-500">Giá trị của biến môi trường</p>
             </div>
-            <div class="flex items-center">
+            <div class="flex items-center space-x-2">
                 <input type="checkbox" name="is_secret" id="is_secret" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                        {% if env_var.is_secret %}checked{% endif %}>
-                <label for="is_secret" class="ml-2 block text-sm text-gray-700">
+                <label for="is_secret" class="flex items-center text-sm text-gray-700">
+                    <i class="bi bi-shield-lock text-primary-500 mr-1"></i>
                     Đánh dấu là biến bảo mật (giá trị sẽ được ẩn)
                 </label>
             </div>
@@ -52,11 +61,44 @@
                 <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-x mr-2"></i> Hủy
                 </a>
-                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                     <i class="bi bi-save mr-2"></i> Lưu thay đổi
                 </button>
             </div>
         </form>
+
+        <!-- Help section -->
+        <div class="mt-8 bg-gray-50 p-4 rounded-md border border-gray-200">
+            <h3 class="text-sm font-medium text-gray-900 mb-2">Hướng dẫn</h3>
+            <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-start">
+                    <i class="bi bi-key text-primary-500 mt-0.5 mr-2"></i>
+                    <span><strong>Key:</strong> Tên của biến môi trường (ví dụ: DATABASE_URL, API_KEY)</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="bi bi-card-text text-primary-500 mt-0.5 mr-2"></i>
+                    <span><strong>Value:</strong> Giá trị của biến môi trường</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="bi bi-shield-lock text-primary-500 mt-0.5 mr-2"></i>
+                    <span><strong>Bảo mật:</strong> Đánh dấu biến môi trường là bảo mật nếu nó chứa thông tin nhạy cảm (ví dụ: mật khẩu, khóa API)</span>
+                </li>
+            </ul>
+            
+            <div class="mt-4 p-4 bg-yellow-50 rounded-md border border-yellow-200">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-exclamation-triangle text-yellow-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h5 class="text-sm font-medium text-yellow-800">Lưu ý quan trọng</h5>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>Các biến môi trường được đánh dấu là bảo mật sẽ được lưu trữ an toàn và không hiển thị trong giao diện. Hãy đảm bảo đánh dấu tất cả thông tin nhạy cảm là bảo mật.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %} 

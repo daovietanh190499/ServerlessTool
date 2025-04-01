@@ -1,5 +1,15 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.text import slugify
+
+class User(AbstractUser):
+    email = models.EmailField(unique=True)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    def __str__(self):
+        return self.email
 
 class Tool(models.Model):
     name = models.CharField(max_length=100, unique=True)
