@@ -31,7 +31,7 @@ class CustomLoginView(UnauthenticatedUserMixin, LoginView):
         next_url = self.request.GET.get('next')
         if next_url:
             return next_url
-        return reverse_lazy('tool_list')
+        return reverse_lazy('landing')
 
     def form_invalid(self, form):
         messages.error(self.request, '❌ Oops! The email or password you entered is incorrect. Please try again.')
