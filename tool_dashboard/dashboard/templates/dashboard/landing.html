@@ -1,211 +1,353 @@
 {% extends "base.html" %}
 
+{% block title %}Serverless Tool Platform - Build & Deploy Serverless Tools in Minutes{% endblock %}
+
 {% block content %}
 <!-- Hero Section -->
-<div class="hero min-h-[70vh] bg-gradient-to-br from-base-200 to-base-300">
-    <div class="hero-content text-center">
-        <div class="max-w-3xl">
-            <div class="flex justify-center mb-8">
-                <div class="w-24 h-24 bg-primary rounded-full flex items-center justify-center">
-                    <svg class="w-12 h-12 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+<section class="pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-br from-primary-50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+            <div class="text-center lg:text-left">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                    Build & Deploy <span class="gradient-text">Serverless Tools</span> in Minutes
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-lg mb-8">
+                    Our platform provides everything you need to create, deploy, and manage serverless applications without infrastructure hassles.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    {% if user.is_authenticated %}
+                    <a href="#features" class="px-8 py-3 rounded-lg bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold text-lg shadow-md hover:shadow-lg transition-all">
+                        Get Started for Free
+                    </a>
+                    {% else %}
+                    <a href="{% url 'register' %}" class="px-8 py-3 rounded-lg bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold text-lg shadow-md hover:shadow-lg transition-all">
+                        Get Started for Free
+                    </a>
+                    {% endif %}
+                    <a href="#features" class="px-8 py-3 rounded-lg border border-gray-300 hover:bg-gray-50 font-medium text-lg transition-colors shadow-sm flex items-center justify-center gap-2">
+                        <i class="fas fa-play"></i> See Demo
+                    </a>
+                </div>
+                <div class="mt-8 flex flex-wrap justify-center lg:justify-start gap-4">
+                    <span class="text-gray-500 flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-500"></i> No credit card required
+                    </span>
+                    <span class="text-gray-500 flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-500"></i> 99.9% uptime
+                    </span>
                 </div>
             </div>
-            <h1 class="text-5xl font-bold mb-6">Serverless Tool Platform</h1>
-            <p class="py-6 text-xl text-gray-600">Create, deploy, and manage your serverless tools with ease. Our platform provides everything you need to build and deploy serverless applications efficiently.</p>
-            {% if not user.is_authenticated %}
-            <div class="flex gap-4 justify-center">
-                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Get Started</a>
-                <!-- <a href="{% url 'register' %}" class="btn btn-secondary btn-lg">Create Account</a> -->
+            <div class="hidden lg:block relative">
+                <div class="relative floating">
+                    <div class="absolute -top-10 -left-10 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+                    <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-primary-300 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+                    <div class="relative">
+                        <div class="rounded-2xl shadow-2xl overflow-hidden border-8 border-white">
+                            <img src="https://placehold.co/600x400/f3f4f6/9ca3af?text=Dashboard+Preview" alt="Dashboard Preview" class="w-full">
+                        </div>
+                    </div>
+                </div>
             </div>
-            {% else %}
-            <div class="flex gap-4 justify-center">
-                <a href="{% url 'tool_list' %}" class="btn btn-primary btn-lg">Go to Dashboard</a>
-                <!-- <a href="{% url 'logout' %}" class="btn btn-ghost btn-lg">Logout</a> -->
+        </div>
+    </div>
+</section>
+
+<!-- Trusted By Section -->
+<div class="py-12 bg-gray-100/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-sm uppercase tracking-wider text-gray-500 mb-8">Trusted by leading companies</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 items-center justify-center">
+            <div class="flex justify-center">
+                <img src="https://placehold.co/160x40/fff/ccc?text=Company+1" alt="Company 1" class="h-8 opacity-70 hover:opacity-100 transition-opacity">
             </div>
-            {% endif %}
+            <div class="flex justify-center">
+                <img src="https://placehold.co/160x40/fff/ccc?text=Company+2" alt="Company 2" class="h-8 opacity-70 hover:opacity-100 transition-opacity">
+            </div>
+            <div class="flex justify-center">
+                <img src="https://placehold.co/160x40/fff/ccc?text=Company+3" alt="Company 3" class="h-8 opacity-70 hover:opacity-100 transition-opacity">
+            </div>
+            <div class="flex justify-center">
+                <img src="https://placehold.co/160x40/fff/ccc?text=Company+4" alt="Company 4" class="h-8 opacity-70 hover:opacity-100 transition-opacity">
+            </div>
+            <div class="flex justify-center">
+                <img src="https://placehold.co/160x40/fff/ccc?text=Company+5" alt="Company 5" class="h-8 opacity-70 hover:opacity-100 transition-opacity">
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Features Section -->
-<div id="features" class="py-20 bg-base-100">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold mb-4">Our Services</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Choose from our range of powerful serverless tools and services to build your next project</p>
+<section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-4xl mx-auto mb-16">
+            <span class="inline-block px-3 py-1 text-sm font-medium text-primary-600 bg-primary-100 rounded-full mb-4">Features</span>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Everything You Need for Serverless Development</h2>
+            <p class="text-lg text-gray-600">
+                Build, deploy, and scale serverless tools with our comprehensive platform designed for developers of all skill levels.
+            </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Tool Dashboard Card -->
-            <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
-                <div class="card-body">
-                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                    <h3 class="card-title text-2xl mb-4">Tool Dashboard</h3>
-                    <p class="text-gray-600 mb-6">Manage and deploy your serverless tools with our intuitive dashboard interface.</p>
-                    {% if user.is_authenticated %}
-                    <div class="card-actions justify-end">
-                        <a href="{% url 'tool_list' %}" class="btn btn-primary">Access Dashboard</a>
-                    </div>
-                    {% else %}
-                    <div class="card-actions justify-end">
-                        <a href="{% url 'login' %}" class="btn btn-primary">Login to Access</a>
-                    </div>
-                    {% endif %}
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="group rounded-xl border border-gray-200 p-6 transition-all hover:border-primary-100 hover:shadow-lg">
+                <div class="w-12 h-12 rounded-lg bg-primary-600 flex items-center justify-center mb-4 group-hover:bg-primary-700 transition-colors">
+                    <i class="fas fa-tachometer-alt text-white text-xl"></i>
                 </div>
+                <h3 class="text-xl font-semibold mb-2">Tool Dashboard</h3>
+                <p class="text-gray-600 mb-4">
+                    Intuitive interface to manage all your serverless tools in one place with real-time monitoring.
+                </p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'tool_list' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium group">
+                    Learn more
+                    <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                </a>
+                {% else %}
+                <a href="{% url 'register' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium group">
+                    Learn more
+                    <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                </a>
+                {% endif %}
             </div>
-
-            <!-- API Management Card -->
-            <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
-                <div class="card-body">
-                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    <h3 class="card-title text-2xl mb-4">API Management</h3>
-                    <p class="text-gray-600 mb-6">Create and manage your serverless APIs with our comprehensive API management system.</p>
-                    <div class="card-actions justify-end">
-                        <button class="btn btn-primary" disabled>Coming Soon</button>
-                    </div>
+            
+            <!-- Feature 2 -->
+            <div class="group rounded-xl border border-gray-200 p-6 transition-all hover:border-primary-100 hover:shadow-lg">
+                <div class="w-12 h-12 rounded-lg bg-primary-600 flex items-center justify-center mb-4 group-hover:bg-primary-700 transition-colors">
+                    <i class="fas fa-code text-white text-xl"></i>
                 </div>
+                <h3 class="text-xl font-semibold mb-2">API Management</h3>
+                <p class="text-gray-600 mb-4">
+                    Create and manage RESTful APIs with built-in authentication, rate limiting, and analytics.
+                </p>
+                <a href="#" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium group">
+                    Coming soon
+                </a>
             </div>
-
-            <!-- Function Hub Card -->
-            <div class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300">
-                <div class="card-body">
-                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                    </div>
-                    <h3 class="card-title text-2xl mb-4">Function Hub</h3>
-                    <p class="text-gray-600 mb-6">Browse and deploy pre-built serverless functions from our extensive library.</p>
-                    <div class="card-actions justify-end">
-                        <button class="btn btn-primary" disabled>Coming Soon</button>
-                    </div>
+            
+            <!-- Feature 3 -->
+            <div class="group rounded-xl border border-gray-200 p-6 transition-all hover:border-primary-100 hover:shadow-lg">
+                <div class="w-12 h-12 rounded-lg bg-primary-600 flex items-center justify-center mb-4 group-hover:bg-primary-700 transition-colors">
+                    <i class="fas fa-cubes text-white text-xl"></i>
                 </div>
+                <h3 class="text-xl font-semibold mb-2">Function Hub</h3>
+                <p class="text-gray-600 mb-4">
+                    Deploy pre-built functions or your own code in multiple languages with just a few clicks.
+                </p>
+                <a href="#" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium group">
+                    Coming soon
+                </a>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- How It Works Section -->
-<div id="how-it-works" class="py-20 bg-base-200">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold mb-4">How It Works</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Get started with our platform in four simple steps</p>
+<section id="how-it-works" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-4xl mx-auto mb-16">
+            <span class="inline-block px-3 py-1 text-sm font-medium text-primary-600 bg-primary-100 rounded-full mb-4">Process</span>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">How Our Platform Works</h2>
+            <p class="text-lg text-gray-600">
+                Get your serverless tools up and running in just a few simple steps.
+            </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="text-center">
-                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-3xl font-bold text-white">1</span>
+        
+        <div class="relative">
+            <!-- Vertical line -->
+            <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 transform -translate-x-1/2"></div>
+            
+            <div class="space-y-8 md:space-y-0">
+                <!-- Step 1 -->
+                <div class="group flex flex-col md:flex-row items-center">
+                    <div class="flex-shrink-0 h-12 w-12 rounded-full bg-white border-2 border-primary-600 flex items-center justify-center relative z-10 shadow-md md:mr-8">
+                        <span class="text-xl font-bold text-primary-600">1</span>
+                    </div>
+                    <div class="mt-4 md:mt-0 md:w-1/2 md:pr-8">
+                        <h3 class="text-xl font-semibold mb-2">Create Your Account</h3>
+                        <p class="text-gray-600">
+                            Sign up for free in just a few seconds. No credit card required to get started.
+                        </p>
+                    </div>
+                    <div class="hidden md:block md:w-1/2 md:pl-8 text-right">
+                        <div class="h-56 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                            <img src="https://placehold.co/400x240/f3f4f6/9ca3af?text=Sign+Up+Form" alt="Sign Up Form" class="w-full h-full object-cover">
+                        </div>
+                    </div>
                 </div>
-                <h3 class="font-bold text-xl mb-2">Create Account</h3>
-                <p class="text-gray-600">Sign up for free and get started in minutes</p>
-            </div>
-            <div class="text-center">
-                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-3xl font-bold text-white">2</span>
+                
+                <!-- Step 2 -->
+                <div class="group flex flex-col md:flex-row items-center">
+                    <div class="flex-shrink-0 h-12 w-12 rounded-full bg-white border-2 border-primary-600 flex items-center justify-center relative z-10 shadow-md md:mr-8">
+                        <span class="text-xl font-bold text-primary-600">2</span>
+                    </div>
+                    <div class="hidden md:block md:w-1/2 md:pr-8">
+                        <div class="h-56 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                            <img src="https://placehold.co/400x240/f3f4f6/9ca3af?text=Service+Selection" alt="Service Selection" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="mt-4 md:mt-0 md:w-1/2 md:pl-8">
+                        <h3 class="text-xl font-semibold mb-2">Select a Service</h3>
+                        <p class="text-gray-600">
+                            Choose from our range of serverless tools or bring your own functions and APIs.
+                        </p>
+                    </div>
                 </div>
-                <h3 class="font-bold text-xl mb-2">Choose Service</h3>
-                <p class="text-gray-600">Select the service that best fits your needs</p>
-            </div>
-            <div class="text-center">
-                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-3xl font-bold text-white">3</span>
+                
+                <!-- Step 3 -->
+                <div class="group flex flex-col md:flex-row items-center">
+                    <div class="flex-shrink-0 h-12 w-12 rounded-full bg-white border-2 border-primary-600 flex items-center justify-center relative z-10 shadow-md md:mr-8">
+                        <span class="text-xl font-bold text-primary-600">3</span>
+                    </div>
+                    <div class="mt-4 md:mt-0 md:w-1/2 md:pr-8">
+                        <h3 class="text-xl font-semibold mb-2">Configure Your Tool</h3>
+                        <p class="text-gray-600">
+                            Customize settings, environment variables, and triggers with our easy-to-use interface.
+                        </p>
+                    </div>
+                    <div class="hidden md:block md:w-1/2 md:pl-8 text-right">
+                        <div class="h-56 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                            <img src="https://placehold.co/400x240/f3f4f6/9ca3af?text=Configuration" alt="Configuration" class="w-full h-full object-cover">
+                        </div>
+                    </div>
                 </div>
-                <h3 class="font-bold text-xl mb-2">Configure</h3>
-                <p class="text-gray-600">Set up your tools and environment variables</p>
-            </div>
-            <div class="text-center">
-                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-3xl font-bold text-white">4</span>
+                
+                <!-- Step 4 -->
+                <div class="group flex flex-col md:flex-row items-center">
+                    <div class="flex-shrink-0 h-12 w-12 rounded-full bg-white border-2 border-primary-600 flex items-center justify-center relative z-10 shadow-md md:mr-8">
+                        <span class="text-xl font-bold text-primary-600">4</span>
+                    </div>
+                    <div class="hidden md:block md:w-1/2 md:pr-8">
+                        <div class="h-56 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                            <img src="https://placehold.co/400x240/f3f4f6/9ca3af?text=Deployment" alt="Deployment" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="mt-4 md:mt-0 md:w-1/2 md:pl-8">
+                        <h3 class="text-xl font-semibold mb-2">Deploy & Monitor</h3>
+                        <p class="text-gray-600">
+                            Deploy instantly and monitor performance with real-time analytics.
+                        </p>
+                    </div>
                 </div>
-                <h3 class="font-bold text-xl mb-2">Deploy</h3>
-                <p class="text-gray-600">Deploy your tools and monitor their performance</p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Why Choose Us Section -->
-<div id="why-choose-us" class="py-20 bg-base-100">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-bold mb-4">Why Choose Us?</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">Discover what makes our platform the perfect choice for your serverless needs</p>
+<section id="why-choose-us" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-4xl mx-auto mb-16">
+            <span class="inline-block px-3 py-1 text-sm font-medium text-primary-600 bg-primary-100 rounded-full mb-4">Benefits</span>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Why Developers Choose Our Platform</h2>
+            <p class="text-lg text-gray-600">
+                We're committed to providing the best serverless development experience.
+            </p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="card bg-base-200 shadow-xl">
-                <div class="card-body">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                        </div>
-                        <h3 class="card-title text-xl">User-Friendly Interface</h3>
-                    </div>
-                    <p class="text-gray-600">Our intuitive dashboard makes it easy to manage your serverless tools without any technical expertise.</p>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-gray-50 p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center mb-4">
+                    <i class="fas fa-rocket text-xl"></i>
                 </div>
+                <h3 class="text-xl font-semibold mb-2">Lightning Fast</h3>
+                <p class="text-gray-600">
+                    Deploy in milliseconds with our optimized infrastructure designed for serverless workloads.
+                </p>
             </div>
-            <div class="card bg-base-200 shadow-xl">
-                <div class="card-body">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                        </div>
-                        <h3 class="card-title text-xl">Secure & Reliable</h3>
-                    </div>
-                    <p class="text-gray-600">Your tools are deployed on secure infrastructure with high availability and performance.</p>
+            
+            <div class="bg-gray-50 p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center mb-4">
+                    <i class="fas fa-lock text-xl"></i>
                 </div>
+                <h3 class="text-xl font-semibold mb-2">Enterprise Security</h3>
+                <p class="text-gray-600">
+                    Built with security best practices including automatic TLS, IAM, and VPC networking.
+                </p>
             </div>
-            <div class="card bg-base-200 shadow-xl">
-                <div class="card-body">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <h3 class="card-title text-xl">Cost-Effective</h3>
-                    </div>
-                    <p class="text-gray-600">Pay only for what you use with our flexible pricing model.</p>
+            
+            <div class="bg-gray-50 p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center mb-4">
+                    <i class="fas fa-dollar-sign text-xl"></i>
                 </div>
+                <h3 class="text-xl font-semibold mb-2">Cost Effective</h3>
+                <p class="text-gray-600">
+                    Only pay for what you use with per-millisecond billing and a generous free tier.
+                </p>
             </div>
-            <div class="card bg-base-200 shadow-xl">
-                <div class="card-body">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        </div>
-                        <h3 class="card-title text-xl">24/7 Support</h3>
-                    </div>
-                    <p class="text-gray-600">Our dedicated support team is always ready to help you with any issues.</p>
+            
+            <div class="bg-gray-50 p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center mb-4">
+                    <i class="fas fa-share-alt text-xl"></i>
                 </div>
+                <h3 class="text-xl font-semibold mb-2">Seamless Integrations</h3>
+                <p class="text-gray-600">
+                    Connect with other services like databases, APIs, and third-party platforms.
+                </p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Call to Action Section -->
-{% if not user.is_authenticated %}
-<div class="bg-primary text-primary-content py-20">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl font-bold mb-8">Ready to Get Started?</h2>
-        <p class="mb-8 text-lg">Create an account and start building your serverless tools today</p>
-        <a href="{% url 'register' %}" class="btn btn-secondary btn-lg">Sign Up Now</a>
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-20 bg-primary-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-4xl mx-auto mb-16">
+            <span class="inline-block px-3 py-1 text-sm font-medium text-primary-600 bg-primary-100 rounded-full mb-4">Testimonials</span>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our Users Say</h2>
+            <p class="text-lg text-gray-600">
+                Don't just take our word for it - hear from developers who love our platform.
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Testimonial 1 -->
+            <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center mb-4">
+                    <img src="https://placehold.co/80x80/eee/999?text=JS" alt="User" class="w-12 h-12 rounded-full">
+                    <div class="ml-4">
+                        <h4 class="font-semibold">James Smith</h4>
+                        <p class="text-sm text-gray-500">CTO @TechCorp</p>
+                    </div>
+                </div>
+                <div class="flex mb-2 text-yellow-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-700 mb-4">
+                    "We've reduced our infrastructure costs by 60% while improving reliability since moving our APIs to ServerlessTools. The team has been incredible to work with."
+                </p>
+                <div class="text-primary-600 text-sm">
+                    <i class="fas fa-check-circle mr-1"></i> Verified User
+                </div>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex items-center mb-4">
+                    <img src="https://placehold.co/80x80/eee/999?text=MW" alt="User" class="w-12 h-12 rounded-full">
+                    <div class="ml-4">
+                        <h4 class="font-semibold">Maria Wilson</h4>
+                        <p class="text-sm text-gray-500">Lead Developer @AppFactory</p>
+                    </div>
+                </div>
+                <div class="flex mb-2 text-yellow-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="text-gray-700 mb-4">
+                    "The dashboard makes it so easy to manage all our serverless functions in one place. Deployment times are significantly faster than our previous setup."
+                </p>
+                <div class="text-primary-600 text-sm">
+                    <i class="fas fa-check-circle mr-1"></i> Verified User
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-{% endif %}
+</section>
 {% endblock %} 
