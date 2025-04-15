@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from dashboard.models import Tool, BuildLog
+from dashboard.models import Tool, BuildLog, DeploymentLog, InputSchema, OutputSchema
 import json
 from rest_framework.decorators import api_view, permission_classes, schema
 from rest_framework.permissions import AllowAny
@@ -14,6 +14,9 @@ from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from rest_framework.response import Response
+from rest_framework import status
+from .schemas import validate_input, validate_output, SchemaValidationError
 
 @extend_schema(
     description="Lấy danh sách tất cả các công cụ",
@@ -448,3 +451,119 @@ def delete_tool_api(request, tool_id):
         return JsonResponse({'error': 'Không tìm thấy công cụ'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+@api_view(['POST'])
+def update_input_schema(request, tool_id):
+    try:
+        tool = Tool.objects.get(id=tool_id)
+        schema_data = request.data.get('schema')
+        
+        if not schema_data:
+            return Response(
+                {"error": "Schema data is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Validate that schema_data is valid JSON
+        try:
+            json.loads(json.dumps(schema_data))
+        except json.JSONDecodeError:
+            return Response(
+                {"error": "Invalid JSON schema"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Create or update input schema
+        input_schema, created = InputSchema.objects.update_or_create(
+            tool=tool,
+            defaults={'schema': schema_data}
+        )
+        
+        return Response({
+            "message": "Input schema updated successfully",
+            "schema": input_schema.schema
+        })
+    
+    except Tool.DoesNotExist:
+        return Response(
+            {"error": "Tool not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+@api_view(['POST'])
+def update_output_schema(request, tool_id):
+    try:
+        tool = Tool.objects.get(id=tool_id)
+        schema_data = request.data.get('schema')
+        
+        if not schema_data:
+            return Response(
+                {"error": "Schema data is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Validate that schema_data is valid JSON
+        try:
+            json.loads(json.dumps(schema_data))
+        except json.JSONDecodeError:
+            return Response(
+                {"error": "Invalid JSON schema"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Create or update output schema
+        output_schema, created = OutputSchema.objects.update_or_create(
+            tool=tool,
+            defaults={'schema': schema_data}
+        )
+        
+        return Response({
+            "message": "Output schema updated successfully",
+            "schema": output_schema.schema
+        })
+    
+    except Tool.DoesNotExist:
+        return Response(
+            {"error": "Tool not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+@api_view(['POST'])
+def execute_tool(request, tool_id):
+    try:
+        tool = Tool.objects.get(id=tool_id)
+        input_data = request.data
+        
+        # Validate input against schema
+        try:
+            validate_input(tool_id, input_data)
+        except ValidationError as e:
+            return Response(
+                {"error": "Input validation failed", "details": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Execute the tool (existing logic)
+        # ... existing execution code ...
+        
+        # Validate output against schema
+        try:
+            validate_output(tool_id, output_data)
+        except ValidationError as e:
+            return Response(
+                {"error": "Output validation failed", "details": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+        return Response(output_data)
+    
+    except Tool.DoesNotExist:
+        return Response(
+            {"error": "Tool not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except SchemaValidationError as e:
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_400_BAD_REQUEST
+        )

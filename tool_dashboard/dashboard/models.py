@@ -70,4 +70,22 @@ class DeploymentLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.tool.name} - {self.timestamp}" 
+        return f"{self.tool.name} - {self.timestamp}"
+
+class InputSchema(models.Model):
+    tool = models.OneToOneField(Tool, on_delete=models.CASCADE, related_name='input_schema')
+    schema = models.JSONField(help_text="JSON schema definition for input validation")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Input Schema for {self.tool.name}"
+
+class OutputSchema(models.Model):
+    tool = models.OneToOneField(Tool, on_delete=models.CASCADE, related_name='output_schema')
+    schema = models.JSONField(help_text="JSON schema definition for output validation")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Output Schema for {self.tool.name}" 

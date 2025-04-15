@@ -98,7 +98,7 @@
                     Intuitive interface to manage all your serverless tools in one place with real-time monitoring.
                 </p>
                 {% if user.is_authenticated %}
-                <a href="{% url 'tool_list' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium group">
+                <a href="{% url 'dashboard:tool_list' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium group">
                     Learn more
                     <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
                 </a>

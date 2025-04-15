@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Sửa biến môi trường - {{ tool.name }}{% endblock %}
+{% block title %}{% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} biến môi trường{% endblock %}
 
 {% block content %}
 <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-primary-50 to-white">
         <h2 class="text-xl font-bold text-gray-900 flex items-center">
-            <i class="bi bi-pencil-square mr-2 text-primary-500"></i>
-            Sửa biến môi trường - {{ tool.name }}
+            <i class="bi bi-{% if form.instance.pk %}pencil-square{% else %}plus-circle{% endif %} mr-2 text-primary-500"></i> {% if form.instance.pk %}Sửa{% else %}Thêm{% endif %} biến môi trường cho {{ tool.name }}
         </h2>
-        <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-            <i class="bi bi-arrow-left mr-2"></i> Quay lại
+        <a href="{% url 'dashboard:manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+            <i class="bi bi-arrow-left mr-2"></i> Quay lại quản lý
         </a>
     </div>
     
@@ -58,7 +57,7 @@
                 </label>
             </div>
             <div class="pt-4 flex justify-between">
-                <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                <a href="{% url 'dashboard:manage_env_vars' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-x mr-2"></i> Hủy
                 </a>
                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">

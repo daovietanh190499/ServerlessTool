@@ -57,18 +57,18 @@
             </div>
             
             <div class="flex flex-wrap gap-2">
-                <a href="{% url 'tool_update' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                <a href="{% url 'dashboard:tool_update' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-pencil mr-2"></i> Sửa
                 </a>
-                <a href="{% url 'script_editor' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                <a href="{% url 'dashboard:script_editor' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-code-slash mr-2"></i> Sửa Script
                 </a>
-                <a href="{% url 'tool_delete' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                <a href="{% url 'dashboard:tool_delete' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
                     <i class="bi bi-trash mr-2"></i> Xóa
                 </a>
                 
                 {% if not tool.is_built %}
-                    <a href="{% url 'build_tool' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200">
+                    <a href="{% url 'dashboard:build_tool' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200">
                         <i class="bi bi-gear mr-2"></i> Build
                     </a>
                 {% elif not tool.is_running %}
@@ -100,6 +100,9 @@
                 </button>
                 <button @click="activeTab = 'logs'" :class="{'border-primary-500 text-primary-600': activeTab === 'logs', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'logs'}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     <i class="bi bi-journal-text mr-2"></i> Logs
+                </button>
+                <button @click="activeTab = 'schema'" :class="{'border-primary-500 text-primary-600': activeTab === 'schema', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'schema'}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    <i class="bi bi-file-earmark-text mr-2"></i> Schema
                 </button>
             </nav>
         </div>
@@ -150,7 +153,7 @@
                     
                     <div class="relative">
                         <div class="absolute top-0 right-0 m-2">
-                            <a href="{% url 'tool_update' tool.slug %}" class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                            <a href="{% url 'dashboard:tool_update' tool.slug %}" class="inline-flex items-center p-1.5 border border-gray-300 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                                 <i class="bi bi-pencil"></i>
                             </a>
                         </div>
@@ -167,7 +170,7 @@
                     <i class="bi bi-code-slash mr-2 text-primary-500"></i>
                     Script Python
                 </h3>
-                <a href="{% url 'script_editor' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                <a href="{% url 'dashboard:script_editor' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-pencil mr-2"></i> Sửa Script
                 </a>
             </div>
@@ -195,7 +198,7 @@
                     <i class="bi bi-gear mr-2 text-primary-500"></i>
                     Biến môi trường
                 </h3>
-                <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                <a href="{% url 'dashboard:manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-pencil mr-2"></i> Quản lý
                 </a>
             </div>
@@ -247,7 +250,7 @@
                     <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có biến môi trường</h3>
                     <p class="mt-1 text-sm text-gray-500">Thêm biến môi trường để cấu hình ứng dụng của bạn.</p>
                     <div class="mt-6">
-                        <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <a href="{% url 'dashboard:manage_env_vars' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                             <i class="bi bi-plus-lg mr-2"></i> Thêm biến môi trường
                         </a>
                     </div>
@@ -262,7 +265,7 @@
                     <i class="bi bi-diagram-3 mr-2 text-primary-500"></i>
                     Công cụ phụ thuộc
                 </h3>
-                <a href="{% url 'manage_dependencies' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                <a href="{% url 'dashboard:manage_dependencies' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-pencil mr-2"></i> Quản lý
                 </a>
             </div>
@@ -291,7 +294,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <a href="{% url 'tool_detail' dep.dependent_tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                                <a href="{% url 'dashboard:tool_detail' dep.dependent_tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                                     <i class="bi bi-box-arrow-up-right mr-1"></i> Xem
                                 </a>
                             </div>
@@ -306,7 +309,7 @@
                     <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có công cụ phụ thuộc</h3>
                     <p class="mt-1 text-sm text-gray-500">Thêm công cụ phụ thuộc để đảm bảo chúng được chạy trước khi công cụ này được triển khai.</p>
                     <div class="mt-6">
-                        <a href="{% url 'manage_dependencies' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <a href="{% url 'dashboard:manage_dependencies' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                             <i class="bi bi-plus-lg mr-2"></i> Thêm phụ thuộc
                         </a>
                     </div>
@@ -361,7 +364,7 @@
                     <p class="mt-1 text-sm text-gray-500">Build công cụ để tạo logs.</p>
                     {% if not tool.is_built %}
                         <div class="mt-6">
-                            <a href="{% url 'build_tool' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <a href="{% url 'dashboard:build_tool' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                                 <i class="bi bi-gear mr-2"></i> Build Tool
                             </a>
                         </div>
@@ -369,163 +372,39 @@
                 </div>
             {% endif %}
         </div>
-    </div>
-</div>
-        <!-- Script tab -->
-        <div x-show="activeTab === 'script'" class="p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900 flex items-center">
-                    <i class="bi bi-code-slash mr-2 text-primary-500"></i>
-                    Script Python
-                </h3>
-                <a href="{% url 'script_editor' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-                    <i class="bi bi-pencil mr-2"></i> Sửa
-                </a>
-            </div>
+
+        <!-- Schema tab -->
+        <div x-show="activeTab === 'schema'" class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                <i class="bi bi-file-earmark-text mr-2 text-primary-500"></i>
+                Quản lý Schema
+            </h3>
+            <p class="text-gray-600 mb-4">Chỉnh sửa schema đầu vào và đầu ra cho công cụ này.</p>
             
-            {% if tool.python_script %}
-                <div class="bg-gray-800 rounded-lg overflow-hidden shadow-sm">
-                    <div class="flex items-center justify-between px-4 py-2 bg-gray-900">
-                        <div class="flex items-center">
-                            <svg class="h-5 w-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                            </svg>
-                            <span class="text-gray-200 text-sm font-medium">Python Script</span>
-                        </div>
-                        <div class="flex space-x-1">
-                            <div class="h-3 w-3 rounded-full bg-red-500"></div>
-                            <div class="h-3 w-3 rounded-full bg-yellow-500"></div>
-                            <div class="h-3 w-3 rounded-full bg-green-500"></div>
-                        </div>
-                    </div>
-                    <div class="p-4 overflow-x-auto">
-                        <pre class="text-gray-200 text-sm font-mono"><code>{{ tool.python_script }}</code></pre>
-                    </div>
+            <div class="space-y-6">
+                <div>
+                    <h4 class="text-md font-medium text-gray-800 mb-2">Input Schema</h4>
+                    {% if formatted_input_schema %}
+                        <pre class="bg-gray-50 p-4 rounded-md border border-gray-200 text-sm text-gray-800 font-mono overflow-x-auto max-h-60 mb-4">{{ formatted_input_schema }}</pre>
+                    {% else %}
+                        <p class="text-gray-500 italic mb-4">Chưa có schema đầu vào.</p>
+                    {% endif %}
+                    <a href="{% url 'dashboard:edit_input_schema' tool.id %}" class="inline-flex items-center px-4 py-2 border border-primary-500 text-sm font-medium rounded-md text-primary-600 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                        <i class="bi bi-pencil mr-2"></i> {% if formatted_input_schema %}Chỉnh sửa{% else %}Định nghĩa{% endif %} Input Schema
+                    </a>
                 </div>
-            {% else %}
-                <div class="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có script</h3>
-                    <p class="mt-1 text-sm text-gray-500">Thêm script Python để xác định chức năng của công cụ.</p>
-                    <div class="mt-6">
-                        <a href="{% url 'script_editor' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                            <i class="bi bi-code-slash mr-2"></i> Tạo Script
-                        </a>
-                    </div>
-                </div>
-            {% endif %}
-            
-            <div class="mt-6 bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                    <h4 class="text-sm font-medium text-gray-900">Hướng dẫn viết script</h4>
-                </div>
-                <div class="p-4">
-                    <div class="prose prose-sm max-w-none text-gray-500">
-                        <p>Script Python của bạn phải chứa một hàm <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process(input_data)</code> nhận một tham số đầu vào và trả về kết quả.</p>
-                        
-                        <h5 class="text-gray-700 font-medium mt-4">Ví dụ:</h5>
-                        <pre class="bg-gray-50 p-3 rounded-md overflow-x-auto text-xs border border-gray-200"><code>def process(input_data):
-    """
-    Hàm xử lý dữ liệu đầu vào và trả về kết quả.
-    
-    Args:
-        input_data: Dữ liệu đầu vào (có thể là string, dict, list, ...)
-        
-    Returns:
-        Kết quả xử lý (có thể là string, dict, list, ...)
-    """
-    # Xử lý dữ liệu đầu vào
-    result = input_data.upper()  # Chuyển đổi thành chữ hoa
-    
-    return result</code></pre>
-                        
-                        <h5 class="text-gray-700 font-medium mt-4">Lưu ý:</h5>
-                        <ul class="mt-2 space-y-1">
-                            <li class="flex items-start">
-                                <i class="bi bi-check-circle text-green-500 mt-0.5 mr-2"></i>
-                                <span>Bạn có thể import các thư viện Python tiêu chuẩn và các thư viện được liệt kê trong requirements.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="bi bi-check-circle text-green-500 mt-0.5 mr-2"></i>
-                                <span>Biến môi trường có thể được truy cập thông qua <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">os.environ</code>.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="bi bi-exclamation-triangle text-yellow-500 mt-0.5 mr-2"></i>
-                                <span>Đảm bảo xử lý các lỗi một cách an toàn để tránh crash ứng dụng.</span>
-                            </li>
-                        </ul>
-                    </div>
+                <div>
+                    <h4 class="text-md font-medium text-gray-800 mb-2">Output Schema</h4>
+                    {% if formatted_output_schema %}
+                        <pre class="bg-gray-50 p-4 rounded-md border border-gray-200 text-sm text-gray-800 font-mono overflow-x-auto max-h-60 mb-4">{{ formatted_output_schema }}</pre>
+                    {% else %}
+                        <p class="text-gray-500 italic mb-4">Chưa có schema đầu ra.</p>
+                    {% endif %}
+                    <a href="{% url 'dashboard:edit_output_schema' tool.id %}" class="inline-flex items-center px-4 py-2 border border-primary-500 text-sm font-medium rounded-md text-primary-600 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                        <i class="bi bi-pencil mr-2"></i> {% if formatted_output_schema %}Chỉnh sửa{% else %}Định nghĩa{% endif %} Output Schema
+                    </a>
                 </div>
             </div>
-        </div>
-        
-        <!-- Environment Variables tab -->
-        <div x-show="activeTab === 'env'" class="p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900 flex items-center">
-                    <i class="bi bi-gear mr-2 text-primary-500"></i>
-                    Biến môi trường
-                </h3>
-                <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-                    <i class="bi bi-pencil mr-2"></i> Quản lý
-                </a>
-            </div>
-            
-            {% if env_vars %}
-                <div class="overflow-x-auto border border-gray-200 rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Bảo mật</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            {% for env in env_vars %}
-                                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        <span class="font-mono">{{ env.key }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {% if env.is_secret %}
-                                            <span class="font-mono">••••••••</span>
-                                        {% else %}
-                                            <span class="font-mono">{{ env.value }}</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                        {% if env.is_secret %}
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                <i class="bi bi-lock-fill mr-1"></i> Bảo mật
-                                            </span>
-                                        {% else %}
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                <i class="bi bi-unlock mr-1"></i> Công khai
-                                            </span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <div class="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                    </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có biến môi trường</h3>
-                    <p class="mt-1 text-sm text-gray-500">Thêm biến môi trường để cấu hình ứng dụng của bạn.</p>
-                    <div class="mt-6">
-                        <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                            <i class="bi bi-plus-lg mr-2"></i> Thêm biến môi trường
-                        </a>
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </div>
 </div>
