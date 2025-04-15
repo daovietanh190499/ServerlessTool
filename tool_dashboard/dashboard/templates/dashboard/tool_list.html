@@ -9,7 +9,7 @@
             <i class="bi bi-tools mr-2 text-primary-500"></i>
             Danh sách công cụ
         </h1>
-        <a href="{% url 'tool_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+        <a href="{% url 'dashboard:tool_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
             <i class="bi bi-plus-circle mr-2"></i> Tạo công cụ mới
         </a>
     </div>
@@ -96,12 +96,12 @@
                             </div>
                             
                             <div class="flex space-x-2">
-                                <a href="{% url 'tool_detail' tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                                <a href="{% url 'dashboard:tool_detail' tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                                     <i class="bi bi-eye mr-1"></i> Chi tiết
                                 </a>
                                 
                                 {% if not tool.is_built %}
-                                    <a href="{% url 'build_tool' tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                    <a href="{% url 'dashboard:build_tool' tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
                                         <i class="bi bi-gear mr-1"></i> Build
                                     </a>
                                 {% elif not tool.is_running %}
@@ -128,7 +128,7 @@
                     Bắt đầu bằng cách tạo công cụ đầu tiên của bạn. Công cụ cho phép bạn xây dựng và triển khai các ứng dụng Python dưới dạng dịch vụ.
                 </p>
                 <div class="mt-6">
-                    <a href="{% url 'tool_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                    <a href="{% url 'dashboard:tool_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                         <i class="bi bi-plus-circle mr-2"></i> Tạo công cụ mới
                     </a>
                 </div>

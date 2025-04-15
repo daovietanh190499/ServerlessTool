@@ -14,4 +14,8 @@ urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    # Schema management endpoints
+    path('tools/<int:tool_id>/input-schema/', views.update_input_schema, name='update_input_schema'),
+    path('tools/<int:tool_id>/output-schema/', views.update_output_schema, name='update_output_schema'),
+    path('tools/<int:tool_id>/execute/', views.execute_tool, name='execute_tool'),
 ]

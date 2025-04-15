@@ -80,3 +80,4 @@ docker-compose.override.yml
 
 # Tệp cấu hình cá nhân
 *.override.*
+.qodo

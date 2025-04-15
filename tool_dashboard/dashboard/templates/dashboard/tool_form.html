@@ -92,8 +92,46 @@ requests==2.26.0">{{ form.requirements.value|default:'' }}</textarea>
                 {% endif %}
             </div>
             
+            <div>
+                <label for="{{ form.input_schema.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Input Schema (JSON)
+                </label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="bi bi-code-square text-gray-400"></i>
+                    </div>
+                    <textarea name="{{ form.input_schema.name }}" id="{{ form.input_schema.id_for_label }}" 
+                              class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.input_schema.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
+                              rows="3" placeholder="Input schema JSON">{{ form.input_schema.value|default:'' }}</textarea>
+                </div>
+                {% if form.input_schema.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.input_schema.errors.0 }}</p>
+                {% else %}
+                    <p class="mt-2 text-xs text-gray-500">{{ form.input_schema.help_text }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.output_schema.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Output Schema (JSON)
+                </label>
+                <div class="mt-1 relative rounded-md shadow-sm">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="bi bi-code-square text-gray-400"></i>
+                    </div>
+                    <textarea name="{{ form.output_schema.name }}" id="{{ form.output_schema.id_for_label }}" 
+                              class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.output_schema.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
+                              rows="3" placeholder="Output schema JSON">{{ form.output_schema.value|default:'' }}</textarea>
+                </div>
+                {% if form.output_schema.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.output_schema.errors.0 }}</p>
+                {% else %}
+                    <p class="mt-2 text-xs text-gray-500">{{ form.output_schema.help_text }}</p>
+                {% endif %}
+            </div>
+            
             <div class="pt-5 border-t border-gray-200 flex justify-between">
-                <a href="{% if form.instance.pk %}{% url 'tool_detail' form.instance.slug %}{% else %}{% url 'tool_list' %}{% endif %}" 
+                <a href="{% if form.instance.pk %}{% url 'dashboard:tool_detail' form.instance.slug %}{% else %}{% url 'dashboard:tool_list' %}{% endif %}" 
                    class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                     <i class="bi bi-x mr-2"></i> Hủy
                 </a>

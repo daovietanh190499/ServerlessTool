@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-)e)iu*=q9bq4$!jv_o7m)62*f+or$umut15g8@g(_hejbx#6)o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["a300-123-30-177-118.ngrok-free.app"]
+ALLOWED_HOSTS = ["a300-123-30-177-118.ngrok-free.app", "localhost", "127.0.0.1"]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://a300-123-30-177-118.ngrok-free.app'
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'drf_spectacular',  # Thêm drf-spectacular
+    'crispy_forms',
+    'crispy_tailwind',
 ]
 
 MIDDLEWARE = [
@@ -162,6 +164,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'dashboard.User'
 LOGOUT_REDIRECT_URL = 'landing'
 LOGIN_REDIRECT_URL = 'tool_list'
+
+# Crispy Forms settings
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 # Security Settings
 SECURE_SSL_REDIRECT = False  # Set to True in production
