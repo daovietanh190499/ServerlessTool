@@ -74,7 +74,7 @@ class ToolCreateView(CreateView):
     def get_initial(self):
         initial = super().get_initial()
         initial['requirements'] = "fastapi==0.95.1\nuvicorn==0.22.0\n"
-        initial['python_script'] = "# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result"
+        initial['python_script'] = "# Write your Python script here\n\ndef process(input_data):\n    # Process input_data\n    result = input_data\n    return result"
         # Provide default empty JSON objects for schemas
         initial['input_schema'] = json.dumps({}, indent=4)
         initial['output_schema'] = json.dumps({}, indent=4)
@@ -92,7 +92,7 @@ class ToolCreateView(CreateView):
         InputSchema.objects.create(tool=self.object, schema=input_schema_data)
         OutputSchema.objects.create(tool=self.object, schema=output_schema_data)
         
-        messages.success(self.request, f"Công cụ {self.object.name} đã được tạo thành công!")
+        messages.success(self.request, f"Tool {self.object.name} created successfully!")
         # Redirect to the success_url (tool_list)
         return redirect(self.get_success_url())
 
@@ -122,7 +122,7 @@ class ToolUpdateView(UpdateView):
             defaults={'schema': output_schema_data}
         )
 
-        messages.success(self.request, f"Công cụ {self.object.name} đã được cập nhật!")
+        messages.success(self.request, f"Tool {self.object.name} updated successfully!")
         # Redirect using superclass logic which uses get_success_url()
         return super().form_valid(form)
 
@@ -132,7 +132,7 @@ class ToolDeleteView(DeleteView):
     
     def delete(self, request, *args, **kwargs):
         tool = self.get_object()
-        messages.success(request, f"Công cụ {tool.name} đã được xóa!")
+        messages.success(request, f"Tool {tool.name} has been deleted!")
         return super().delete(request, *args, **kwargs)
 
 def script_editor_view(request, slug):
@@ -142,7 +142,7 @@ def script_editor_view(request, slug):
         script_content = request.POST.get('script_content', '')
         tool.python_script = script_content
         tool.save()
-        messages.success(request, "Script đã được lưu thành công!")
+        messages.success(request, "Script has been saved successfully!")
         return redirect('dashboard:tool_detail', slug=tool.slug)
     
     return render(request, 'dashboard/script_editor.html', {'tool': tool})
@@ -154,7 +154,7 @@ def manage_env_vars(request, slug):
         formset = EnvironmentVariableFormSet(request.POST, instance=tool)
         if formset.is_valid():
             formset.save()
-            messages.success(request, "Biến môi trường đã được cập nhật thành công.")
+            messages.success(request, "Environment variables updated successfully.")
             return redirect('dashboard:tool_detail', slug=tool.slug)
     else:
         formset = EnvironmentVariableFormSet(instance=tool)
@@ -175,7 +175,7 @@ def add_env_var(request, slug):
         if key and value:
             # Kiểm tra xem key đã tồn tại chưa
             if EnvironmentVariable.objects.filter(tool=tool, key=key).exists():
-                messages.error(request, f"Biến môi trường với key '{key}' đã tồn tại.")
+                messages.error(request, f"Environment variable with key '{key}' already exists.")
             else:
                 EnvironmentVariable.objects.create(
                     tool=tool,
@@ -183,7 +183,7 @@ def add_env_var(request, slug):
                     value=value,
                     is_secret=is_secret
                 )
-                messages.success(request, f"Biến môi trường '{key}' đã được thêm thành công.")
+                messages.success(request, f"Environment variable '{key}' added successfully.")
                 return redirect('dashboard:manage_env_vars', slug=tool.slug)
         else:
             messages.error(request, "Vui lòng nhập cả key và value.")
@@ -206,16 +206,16 @@ def edit_env_var(request, slug, env_id):
         if key and value:
             # Kiểm tra xem key mới đã tồn tại chưa (nếu key thay đổi)
             if key != env_var.key and EnvironmentVariable.objects.filter(tool=tool, key=key).exists():
-                messages.error(request, f"Biến môi trường với key '{key}' đã tồn tại.")
+                messages.error(request, f"Environment variable with key '{key}' already exists.")
             else:
                 env_var.key = key
                 env_var.value = value
                 env_var.is_secret = is_secret
                 env_var.save()
-                messages.success(request, f"Biến môi trường '{key}' đã được cập nhật thành công.")
+                messages.success(request, f"Environment variable '{key}' updated successfully.")
                 return redirect('dashboard:manage_env_vars', slug=tool.slug)
         else:
-            messages.error(request, "Vui lòng nhập cả key và value.")
+            messages.error(request, "Please enter both key and value.")
     
     return render(request, 'dashboard/edit_env_var.html', {
         'tool': tool,
@@ -229,7 +229,7 @@ def delete_env_var(request, slug, env_id):
     if request.method == 'POST':
         key = env_var.key
         env_var.delete()
-        messages.success(request, f"Biến môi trường '{key}' đã được xóa thành công.")
+        messages.success(request, f"Environment variable '{key}' deleted successfully.")
     
     return redirect('dashboard:manage_env_vars', slug=tool.slug)
 
@@ -242,7 +242,7 @@ def manage_dependencies(request, slug):
             dependency = form.save(commit=False)
             dependency.tool = tool
             dependency.save()
-            messages.success(request, "Phụ thuộc đã được thêm!")
+            messages.success(request, "Dependency added successfully!")
             return redirect('dashboard:tool_detail', slug=tool.slug)
     else:
         form = ToolDependencyForm(tool=tool)
@@ -258,7 +258,7 @@ def remove_dependency(request, pk):
     dependency = get_object_or_404(ToolDependency, pk=pk)
     tool_slug = dependency.tool.slug
     dependency.delete()
-    messages.success(request, "Phụ thuộc đã được xóa!")
+    messages.success(request, "Dependency deleted successfully!")
     return redirect('dashboard:tool_detail', slug=tool_slug)
 
 def build_tool(request, slug):
@@ -283,7 +283,7 @@ def build_tool(request, slug):
         build_log = BuildLog.objects.create(
             tool=tool,
             status='started',
-            log=f"Bắt đầu build Docker image cho {tool.name}"
+            log=f"Started building Docker image for {tool.name}"
         )
         
         # Cập nhật trạng thái tool
@@ -294,13 +294,13 @@ def build_tool(request, slug):
         # subprocess.Popen(['curl', '-X', 'POST', f"{jenkins_url}/job/{job_name}/buildWithParameters",
         #                  '--data', f"TOOL_ID={tool.id}"])
         
-        messages.success(request, f"Đã bắt đầu build Docker image cho {tool.name}. Vui lòng kiểm tra log để biết tiến độ.")
+        messages.success(request, f"Started building Docker image for {tool.name}. Please check the logs for progress.")
     except Exception as e:
-        messages.error(request, f"Lỗi khi build tool: {str(e)}")
+        messages.error(request, f"Error building tool: {str(e)}")
         build_log = BuildLog.objects.create(
             tool=tool,
             status='error',
-            log=f"Lỗi: {str(e)}"
+            log=f"Error: {str(e)}"
         )
         tool.build_status = 'error'
         tool.save()
@@ -311,7 +311,7 @@ def deploy_tool(request, slug):
     tool = get_object_or_404(Tool, slug=slug)
     
     if not tool.is_built:
-        messages.error(request, "Công cụ cần được build trước khi deploy!")
+        messages.error(request, "Tool needs to be built before deployment!")
         return redirect('dashboard:tool_detail', slug=tool.slug)
     
     try:
@@ -344,7 +344,7 @@ def deploy_tool(request, slug):
         deploy_log = DeploymentLog.objects.create(
             tool=tool,
             status='started',
-            log=f"Bắt đầu deploy {tool.name} lên Kubernetes"
+            log=f"Started deploying {tool.name} to Kubernetes"
         )
         
         # Thực thi lệnh kubectl apply
@@ -362,27 +362,27 @@ def deploy_tool(request, slug):
             
             # Cập nhật log
             deploy_log.status = 'success'
-            deploy_log.log += f"\n\nDeploy thành công:\n{result.stdout}"
+            deploy_log.log += f"\n\nSuccessfully deployed:\n{result.stdout}"
             deploy_log.save()
             
-            messages.success(request, f"Đã deploy {tool.name} lên Kubernetes thành công!")
+            messages.success(request, f"Successfully deployed {tool.name} to Kubernetes!")
         else:
             # Cập nhật log
             deploy_log.status = 'error'
-            deploy_log.log += f"\n\nDeploy thất bại:\n{result.stderr}"
+            deploy_log.log += f"\n\nDeploy failed:\n{result.stderr}"
             deploy_log.save()
             
-            messages.error(request, f"Lỗi khi deploy tool: {result.stderr}")
+            messages.error(request, f"Error deploying tool: {result.stderr}")
         
         # Xóa file tạm
         os.unlink(temp_file_path)
         
     except Exception as e:
-        messages.error(request, f"Lỗi khi deploy tool: {str(e)}")
+        messages.error(request, f"Error deploying tool: {str(e)}")
         deploy_log = DeploymentLog.objects.create(
             tool=tool,
             status='error',
-            log=f"Lỗi: {str(e)}"
+            log=f"Error: {str(e)}"
         )
     
     return redirect('dashboard:tool_detail', slug=tool.slug)
@@ -391,7 +391,7 @@ def stop_tool(request, slug):
     tool = get_object_or_404(Tool, slug=slug)
     
     if not tool.is_running:
-        messages.error(request, "Công cụ không đang chạy!")
+        messages.error(request, "Tool is not running!")
         return redirect('dashboard:tool_detail', slug=tool.slug)
     
     try:
@@ -416,7 +416,7 @@ def stop_tool(request, slug):
         deploy_log = DeploymentLog.objects.create(
             tool=tool,
             status='stopping',
-            log=f"Bắt đầu dừng {tool.name} trên Kubernetes"
+            log=f"Starting to stop {tool.name} on Kubernetes"
         )
         
         # Thực thi lệnh kubectl delete
@@ -434,27 +434,27 @@ def stop_tool(request, slug):
             
             # Cập nhật log
             deploy_log.status = 'stopped'
-            deploy_log.log += f"\n\nDừng thành công:\n{result.stdout}"
+            deploy_log.log += f"\n\nSuccessfully stopped:\n{result.stdout}"
             deploy_log.save()
             
-            messages.success(request, f"Đã dừng {tool.name} trên Kubernetes thành công!")
+            messages.success(request, f"Successfully stopped {tool.name} on Kubernetes!")
         else:
             # Cập nhật log
             deploy_log.status = 'error'
-            deploy_log.log += f"\n\nDừng thất bại:\n{result.stderr}"
+            deploy_log.log += f"\n\nFailed to stop:\n{result.stderr}"
             deploy_log.save()
             
-            messages.error(request, f"Lỗi khi dừng tool: {result.stderr}")
+            messages.error(request, f"Error stopping tool: {result.stderr}")
         
         # Xóa file tạm
         os.unlink(temp_file_path)
         
     except Exception as e:
-        messages.error(request, f"Lỗi khi dừng tool: {str(e)}")
+        messages.error(request, f"Error stopping tool: {str(e)}")
         deploy_log = DeploymentLog.objects.create(
             tool=tool,
             status='error',
-            log=f"Lỗi: {str(e)}"
+            log=f"Error: {str(e)}"
         )
     
     return redirect('dashboard:tool_detail', slug=tool.slug)
@@ -495,7 +495,7 @@ def delete_tool(request, slug):
                     os.unlink(temp_file_path)
                 except Exception as e:
                     # Ghi log lỗi nhưng vẫn tiếp tục xóa công cụ
-                    print(f"Lỗi khi dừng công cụ: {str(e)}")
+                    print(f"Error stopping tool: {str(e)}")
             
             # Nếu có Docker image, xóa nó
             if tool.docker_image:
@@ -507,7 +507,7 @@ def delete_tool(request, slug):
                     )
                 except Exception as e:
                     # Ghi log lỗi nhưng vẫn tiếp tục xóa công cụ
-                    print(f"Lỗi khi xóa Docker image: {str(e)}")
+                    print(f"Error deleting Docker image: {str(e)}")
             
             # Lưu tên để hiển thị trong thông báo
             tool_name = tool.name
@@ -515,10 +515,10 @@ def delete_tool(request, slug):
             # Xóa công cụ
             tool.delete()
             
-            messages.success(request, f'Công cụ {tool_name} đã được xóa thành công')
+            messages.success(request, f'Tool {tool_name} has been deleted successfully')
             return redirect('dashboard:tool_list')
         except Exception as e:
-            messages.error(request, f'Lỗi khi xóa công cụ: {str(e)}')
+            messages.error(request, f'Error deleting tool: {str(e)}')
             return redirect('dashboard:tool_detail', slug=slug)
     
     return render(request, 'dashboard/tool_confirm_delete.html', {'tool': tool})
@@ -627,10 +627,10 @@ def edit_input_schema(request, tool_id):
                 defaults={'schema': schema_data}
             )
             
-            messages.success(request, "Đã cập nhật schema đầu vào.")
+            messages.success(request, "Input schema updated successfully.")
             return redirect('dashboard:tool_detail', slug=tool.slug)
         else:
-            messages.error(request, "Dữ liệu schema không hợp lệ.")
+            messages.error(request, "Invalid schema data.")
     else:
         initial_data = {}
         if hasattr(tool, 'input_schema'):

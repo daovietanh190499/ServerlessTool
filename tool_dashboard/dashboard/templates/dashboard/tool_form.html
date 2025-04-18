@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if form.instance.pk %}Sửa {{ form.instance.name }}{% else %}Tạo công cụ mới{% endif %}{% endblock %}
+{% block title %}{% if form.instance.pk %}Edit {{ form.instance.name }}{% else %}Create new tool{% endif %}{% endblock %}
 
 {% block content %}
 <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-primary-50 to-white">
         <h2 class="text-xl font-bold text-gray-900 flex items-center">
             {% if form.instance.pk %}
-                <i class="bi bi-pencil-square mr-2 text-primary-500"></i> Sửa {{ form.instance.name }}
+                <i class="bi bi-pencil-square mr-2 text-primary-500"></i> Edit {{ form.instance.name }}
             {% else %}
-                <i class="bi bi-plus-circle mr-2 text-primary-500"></i> Tạo công cụ mới
+                <i class="bi bi-plus-circle mr-2 text-primary-500"></i> Create new tool
             {% endif %}
         </h2>
     </div>
@@ -20,7 +20,7 @@
             
             <div>
                 <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                    Tên công cụ <span class="text-red-500">*</span>
+                    Tool name <span class="text-red-500">*</span>
                 </label>
                 <div class="mt-1 relative rounded-md shadow-sm">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -28,28 +28,28 @@
                     </div>
                     <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}" 
                            class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.name.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
-                           value="{{ form.name.value|default:'' }}" placeholder="Nhập tên công cụ" required>
+                           value="{{ form.name.value|default:'' }}" placeholder="Enter tool name" required>
                 </div>
                 {% if form.name.errors %}
                     <p class="mt-2 text-sm text-red-600">{{ form.name.errors.0 }}</p>
                 {% else %}
-                    <p class="mt-2 text-xs text-gray-500">Tên công cụ sẽ được hiển thị trong danh sách công cụ.</p>
+                    <p class="mt-2 text-xs text-gray-500">The tool name will be displayed in the tool list.</p>
                 {% endif %}
             </div>
             
             <div>
                 <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                    Mô tả
+                    Description
                 </label>
                 <div class="mt-1">
                     <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}" 
                               class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md {% if form.description.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
-                              rows="3" placeholder="Mô tả ngắn gọn về công cụ này">{{ form.description.value|default:'' }}</textarea>
+                              rows="3" placeholder="Short description of the tool">{{ form.description.value|default:'' }}</textarea>
                 </div>
                 {% if form.description.errors %}
                     <p class="mt-2 text-sm text-red-600">{{ form.description.errors.0 }}</p>
                 {% else %}
-                    <p class="mt-2 text-xs text-gray-500">Mô tả ngắn gọn về chức năng của công cụ.</p>
+                    <p class="mt-2 text-xs text-gray-500">Short description of the tool's functionality.</p>
                 {% endif %}
             </div>
             
@@ -59,7 +59,7 @@
                 </label>
                 <div class="mt-1 mb-2 flex items-center text-sm text-gray-500">
                     <i class="bi bi-info-circle mr-2 text-primary-500"></i>
-                    <span>Viết script Python của bạn ở đây. Hàm <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process()</code> là bắt buộc.</span>
+                    <span>Write your Python script here. The <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process()</code> function is required.</span>
                 </div>
                 <div id="editor-container" class="mt-1 rounded-md shadow-sm border border-gray-300 overflow-hidden">
                     <div id="monaco-editor" class="h-96 w-full"></div>
@@ -88,7 +88,7 @@ requests==2.26.0">{{ form.requirements.value|default:'' }}</textarea>
                 {% if form.requirements.errors %}
                     <p class="mt-2 text-sm text-red-600">{{ form.requirements.errors.0 }}</p>
                 {% else %}
-                    <p class="mt-2 text-xs text-gray-500">Liệt kê các package Python cần thiết, mỗi package trên một dòng (định dạng requirements.txt).</p>
+                    <p class="mt-2 text-xs text-gray-500">List the Python packages required, one per line (in requirements.txt format).</p>
                 {% endif %}
             </div>
             
@@ -133,11 +133,11 @@ requests==2.26.0">{{ form.requirements.value|default:'' }}</textarea>
             <div class="pt-5 border-t border-gray-200 flex justify-between">
                 <a href="{% if form.instance.pk %}{% url 'dashboard:tool_detail' form.instance.slug %}{% else %}{% url 'dashboard:tool_list' %}{% endif %}" 
                    class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-                    <i class="bi bi-x mr-2"></i> Hủy
+                    <i class="bi bi-x mr-2"></i> Cancel
                 </a>
                 <button type="submit" 
                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-                    <i class="bi bi-save mr-2"></i> Lưu
+                    <i class="bi bi-save mr-2"></i> Save
                 </button>
             </div>
         </form>
@@ -149,37 +149,37 @@ requests==2.26.0">{{ form.requirements.value|default:'' }}</textarea>
     <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
         <h3 class="text-lg font-medium text-gray-900 flex items-center">
             <i class="bi bi-info-circle mr-2 text-blue-500"></i>
-            Hướng dẫn
+            Instructions
         </h3>
     </div>
     <div class="p-6">
         <div class="prose prose-sm max-w-none text-gray-500">
-            <h4 class="text-gray-700 font-medium">Cấu trúc script Python</h4>
-            <p>Script Python của bạn phải chứa một hàm <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process(input_data)</code> nhận một tham số đầu vào và trả về kết quả.</p>
+            <h4 class="text-gray-700 font-medium">Python script structure</h4>
+            <p>Your Python script must contain a <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process(input_data)</code> function that takes an input parameter and returns a result.</p>
             
             <div class="mt-4 bg-gray-50 p-4 rounded-md border border-gray-200">
-                <h5 class="text-sm font-medium text-gray-700 mb-2">Ví dụ:</h5>
+                <h5 class="text-sm font-medium text-gray-700 mb-2">Example:</h5>
                 <pre class="bg-gray-800 text-gray-200 p-3 rounded-md overflow-x-auto text-xs"><code>def process(input_data):
     """
-    Hàm xử lý dữ liệu đầu vào và trả về kết quả.
+    Process the input data and return the result.
     
     Args:
-        input_data: Dữ liệu đầu vào (có thể là string, dict, list, ...)
+        input_data: Input data (can be string, dict, list, ...)
         
     Returns:
-        Kết quả xử lý (có thể là string, dict, list, ...)
+        Result (can be string, dict, list, ...)
     """
-    # Xử lý dữ liệu đầu vào
-    result = input_data.upper()  # Chuyển đổi thành chữ hoa
+    # Process the input data
+    result = input_data.upper()  # Convert to uppercase
     
     return result</code></pre>
             </div>
             
             <h4 class="text-gray-700 font-medium mt-6">Requirements</h4>
-            <p>Liệt kê các package Python cần thiết cho script của bạn, mỗi package trên một dòng, theo định dạng requirements.txt.</p>
+            <p>List the Python packages required for your script, one per line, in requirements.txt format.</p>
             
             <div class="mt-4 bg-gray-50 p-4 rounded-md border border-gray-200">
-                <h5 class="text-sm font-medium text-gray-700 mb-2">Ví dụ:</h5>
+                <h5 class="text-sm font-medium text-gray-700 mb-2">Example:</h5>
                 <pre class="bg-gray-800 text-gray-200 p-3 rounded-md overflow-x-auto text-xs"><code>numpy==1.21.0
 pandas==1.3.0
 requests==2.26.0</code></pre>
@@ -191,9 +191,9 @@ requests==2.26.0</code></pre>
                         <i class="bi bi-exclamation-triangle text-yellow-400"></i>
                     </div>
                     <div class="ml-3">
-                        <h5 class="text-sm font-medium text-yellow-800">Lưu ý quan trọng</h5>
+                        <h5 class="text-sm font-medium text-yellow-800">Important note</h5>
                         <div class="mt-2 text-sm text-yellow-700">
-                            <p>Đảm bảo script của bạn xử lý các lỗi một cách an toàn để tránh crash ứng dụng. Sử dụng try-except để bắt các ngoại lệ có thể xảy ra.</p>
+                            <p>Ensure your script handles errors safely to avoid crashing the application. Use try-except to catch any possible exceptions.</p>
                         </div>
                     </div>
                 </div>
@@ -211,24 +211,24 @@ requests==2.26.0</code></pre>
         require(['vs/editor/editor.main'], function() {
             // Lấy nội dung từ input
             var inputElement = document.getElementById('{{ form.python_script.id_for_label }}');
-            var initialValue = inputElement.value || `# Viết script Python của bạn ở đây
+            var initialValue = inputElement.value || `# Write your Python script here
 
 def process(input_data):
     """
-    Hàm xử lý dữ liệu đầu vào và trả về kết quả.
+    Process the input data and return the result.
     
     Args:
-        input_data: Dữ liệu đầu vào (có thể là string, dict, list, ...)
+        input_data: Input data (can be string, dict, list, ...)
         
     Returns:
-        Kết quả xử lý (có thể là string, dict, list, ...)
+        Result (can be string, dict, list, ...)
     """
-    # Xử lý dữ liệu đầu vào
+    # Process the input data
     result = input_data
     
     return result`;
             
-            // Tạo Monaco Editor
+            // Create Monaco Editor
             var editor = monaco.editor.create(document.getElementById('monaco-editor'), {
                 value: initialValue,
                 language: 'python',
@@ -248,7 +248,7 @@ def process(input_data):
                 insertSpaces: true
             });
             
-            // Cập nhật giá trị khi submit form
+            // Update the value when the form is submitted
             var form = document.querySelector('form');
             form.addEventListener('submit', function() {
                 inputElement.value = editor.getValue();
