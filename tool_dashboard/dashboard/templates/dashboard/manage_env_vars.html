@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Quản lý biến môi trường - {{ tool.name }}{% endblock %}
+{% block title %}Environment Variables Management - {{ tool.name }}{% endblock %}
 
 {% block content %}
 <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-primary-50 to-white">
         <h2 class="text-xl font-bold text-gray-900 flex items-center">
             <i class="bi bi-gear mr-2 text-primary-500"></i>
-            Quản lý biến môi trường - {{ tool.name }}
+            Environment Variables Management - {{ tool.name }}
         </h2>
         <a href="{% url 'dashboard:tool_detail' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-            <i class="bi bi-arrow-left mr-2"></i> Quay lại
+            <i class="bi bi-arrow-left mr-2"></i> Back to tool
         </a>
     </div>
     
@@ -26,15 +26,15 @@
         <!-- Danh sách biến môi trường hiện tại -->
         {% if env_vars %}
             <div class="mb-8">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">Biến môi trường hiện tại</h3>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Current Environment Variables</h3>
                 <div class="overflow-x-auto border border-gray-200 rounded-lg">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Bảo mật</th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
+                                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Secure</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -53,11 +53,11 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                         {% if env.is_secret %}
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                <i class="bi bi-lock-fill mr-1"></i> Bảo mật
+                                                <i class="bi bi-lock-fill mr-1"></i> Secure
                                             </span>
                                         {% else %}
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                <i class="bi bi-unlock mr-1"></i> Công khai
+                                                <i class="bi bi-unlock mr-1"></i> Public
                                             </span>
                                         {% endif %}
                                     </td>
@@ -66,7 +66,7 @@
                                             <a href="{% url 'dashboard:edit_env_var' tool.slug env.id %}" class="text-primary-600 hover:text-primary-900">
                                                 <i class="bi bi-pencil-square mr-1"></i> Edit
                                             </a>
-                                            <form method="post" action="{% url 'delete_env_var' tool.slug env.id %}" class="inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa biến môi trường này không?');">
+                                            <form method="post" action="{% url 'delete_env_var' tool.slug env.id %}" class="inline" onsubmit="return confirm('Are you sure you want to delete this environment variable?');">
                                                 {% csrf_token %}
                                                 <button type="submit" class="text-red-600 hover:text-red-900">
                                                     <i class="bi bi-trash"></i>
@@ -84,7 +84,7 @@
         
         <!-- Form thêm biến môi trường mới -->
         <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Thêm biến môi trường mới</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Add New Environment Variable</h3>
             <form method="post" action="{% url 'add_env_var' tool.slug %}" class="space-y-4">
                 {% csrf_token %}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -98,7 +98,7 @@
                                    class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                                    placeholder="DATABASE_URL, API_KEY, etc.">
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Tên biến môi trường (chỉ chữ cái, số và dấu gạch dưới)</p>
+                        <p class="mt-1 text-xs text-gray-500">Environment variable name (only letters, numbers and underscores)</p>
                     </div>
                     <div>
                         <label for="value" class="block text-sm font-medium text-gray-700">Value <span class="text-red-500">*</span></label>
@@ -110,19 +110,19 @@
                                    class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                                    placeholder="postgres://user:password@localhost:5432/db">
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">Giá trị của biến môi trường</p>
+                        <p class="mt-1 text-xs text-gray-500">Environment variable value</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
                     <input type="checkbox" name="is_secret" id="is_secret" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
                     <label for="is_secret" class="flex items-center text-sm text-gray-700">
                         <i class="bi bi-shield-lock text-primary-500 mr-1"></i>
-                        Đánh dấu là biến bảo mật (giá trị sẽ được ẩn)
+                        Mark as secure (value will be hidden)
                     </label>
                 </div>
                 <div class="flex justify-end">
                     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-                        <i class="bi bi-plus-lg mr-2"></i> Thêm biến môi trường
+                        <i class="bi bi-plus-lg mr-2"></i> Add Environment Variable
                     </button>
                 </div>
             </form>
@@ -135,12 +135,12 @@
                     <i class="bi bi-info-circle text-blue-400"></i>
                 </div>
                 <div class="ml-3">
-                    <h3 class="text-sm font-medium text-blue-800">Lưu ý về biến môi trường</h3>
+                    <h3 class="text-sm font-medium text-blue-800">Note about environment variables</h3>
                     <div class="mt-2 text-sm text-blue-700">
                         <ul class="list-disc pl-5 space-y-1">
-                            <li>Biến môi trường được sử dụng để cấu hình ứng dụng của bạn mà không cần thay đổi mã nguồn.</li>
-                            <li>Các biến bảo mật sẽ được mã hóa và không hiển thị trong giao diện.</li>
-                            <li>Trong script Python, bạn có thể truy cập biến môi trường bằng <code class="px-1.5 py-0.5 bg-blue-100 rounded text-blue-800 font-mono text-xs">os.environ.get('KEY')</code>.</li>
+                            <li>Environment variables are used to configure your application without changing the source code.</li>
+                            <li>Secure variables will be encrypted and not displayed in the interface.</li>
+                            <li>In the Python script, you can access environment variables by <code class="px-1.5 py-0.5 bg-blue-100 rounded text-blue-800 font-mono text-xs">os.environ.get('KEY')</code>.</li>
                         </ul>
                     </div>
                 </div>

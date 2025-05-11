@@ -44,11 +44,11 @@ class ToolForm(forms.ModelForm):
             'python_script': forms.Textarea(attrs={
                 'rows': 10,
                 'class': 'form-control code-editor',
-                'placeholder': '# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result'
+                'placeholder': '# Write your Python script here\n\ndef process(input_data):\n    # Process input_data\n    result = input_data\n    return result'
             }),
             'requirements': forms.Textarea(attrs={
                 'rows': 5, 
-                'placeholder': 'fastapi==0.95.1\nuvicorn==0.22.0\n# Thêm các gói khác ở đây'
+                'placeholder': 'fastapi==0.95.1\nuvicorn==0.22.0\n# Add other packages here'
             })
         }
     
@@ -59,7 +59,7 @@ class ToolForm(forms.ModelForm):
             if not self.initial.get('requirements'):
                 self.initial['requirements'] = "fastapi==0.95.1\nuvicorn==0.22.0\n"
             if not self.initial.get('python_script'):
-                self.initial['python_script'] = "# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result"
+                self.initial['python_script'] = "# Write your Python script here\n\ndef process(input_data):\n    # Process input_data\n    result = input_data\n    return result"
             if 'input_schema' not in self.initial:
                 self.initial['input_schema'] = json.dumps({}, indent=4)
             if 'output_schema' not in self.initial:

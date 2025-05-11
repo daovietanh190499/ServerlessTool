@@ -115,7 +115,7 @@ def create_tool_api(request):
             
             # Đảm bảo python_script có mẫu mặc định nếu trống
             if not tool.python_script:
-                tool.python_script = "# Viết script Python của bạn ở đây\n\ndef process(input_data):\n    # Xử lý input_data\n    result = input_data\n    return result"
+                tool.python_script = "# Write your Python script here\n\ndef process(input_data):\n    # Process input_data\n    result = input_data\n    return result"
             
             tool.save()
             
@@ -123,7 +123,7 @@ def create_tool_api(request):
                 'id': tool.id,
                 'name': tool.name,
                 'slug': tool.slug,
-                'message': f'Công cụ {tool.name} đã được tạo thành công'
+                'message': f'Tool {tool.name} created successfully'
             }, status=201)
         else:
             return JsonResponse({'error': serializer.errors}, status=400)
@@ -178,9 +178,9 @@ def build_callback(request):
     return JsonResponse({'status': 'error', 'message': 'Method not allowed'})
 
 @extend_schema(
-    description="Deploy một công cụ lên Kubernetes",
+    description="Deploy a tool to Kubernetes",
     parameters=[
-        OpenApiParameter(name="tool_id", type=int, location=OpenApiParameter.PATH, description="ID của công cụ")
+        OpenApiParameter(name="tool_id", type=int, location=OpenApiParameter.PATH, description="ID of the tool")
     ],
     responses={
         200: {"type": "object", "properties": {"status": {"type": "string"}, "message": {"type": "string"}}},
@@ -197,7 +197,7 @@ def deploy_tool_api(request, tool_id):
         if not tool.is_built:
             return JsonResponse({
                 'status': 'error',
-                'message': 'Công cụ cần được build trước khi deploy'
+                'message': 'Tool needs to be built before deployment'
             }, status=400)
         
         # Lấy tất cả biến môi trường
@@ -229,7 +229,7 @@ def deploy_tool_api(request, tool_id):
         deploy_log = DeploymentLog.objects.create(
             tool=tool,
             status='started',
-            log=f"Bắt đầu deploy {tool.name} lên Kubernetes thông qua API"
+            log=f"Started deploying {tool.name} to Kubernetes via API"
         )
         
         # Thực thi lệnh kubectl apply
@@ -247,23 +247,23 @@ def deploy_tool_api(request, tool_id):
             
             # Cập nhật log
             deploy_log.status = 'success'
-            deploy_log.log += f"\n\nDeploy thành công:\n{result.stdout}"
+            deploy_log.log += f"\n\nSuccessfully deployed:\n{result.stdout}"
             deploy_log.save()
             
             return JsonResponse({
                 'status': 'success',
-                'message': f"Đã deploy {tool.name} lên Kubernetes thành công",
+                'message': f"Successfully deployed {tool.name} to Kubernetes",
                 'details': result.stdout
             })
         else:
             # Cập nhật log
             deploy_log.status = 'error'
-            deploy_log.log += f"\n\nDeploy thất bại:\n{result.stderr}"
+            deploy_log.log += f"\n\nDeployment failed:\n{result.stderr}"
             deploy_log.save()
             
             return JsonResponse({
                 'status': 'error',
-                'message': f"Lỗi khi deploy tool",
+                'message': f"Error deploying tool",
                 'details': result.stderr
             }, status=400)
         
@@ -282,9 +282,9 @@ def deploy_tool_api(request, tool_id):
         }, status=400)
 
 @extend_schema(
-    description="Dừng một công cụ đang chạy trên Kubernetes",
+    description="Stop a running tool on Kubernetes",
     parameters=[
-        OpenApiParameter(name="tool_id", type=int, location=OpenApiParameter.PATH, description="ID của công cụ")
+        OpenApiParameter(name="tool_id", type=int, location=OpenApiParameter.PATH, description="ID of the tool")
     ],
     responses={
         200: {"type": "object", "properties": {"status": {"type": "string"}, "message": {"type": "string"}}},
@@ -301,7 +301,7 @@ def stop_tool_api(request, tool_id):
         if not tool.is_running:
             return JsonResponse({
                 'status': 'error',
-                'message': 'Công cụ không đang chạy'
+                'message': 'Tool is not running'
             }, status=400)
         
         # Tạo file tạm thời để lưu YAML
@@ -325,7 +325,7 @@ def stop_tool_api(request, tool_id):
         deploy_log = DeploymentLog.objects.create(
             tool=tool,
             status='stopping',
-            log=f"Bắt đầu dừng {tool.name} trên Kubernetes thông qua API"
+            log=f"Started stopping {tool.name} on Kubernetes via API"
         )
         
         # Thực thi lệnh kubectl delete
@@ -343,23 +343,23 @@ def stop_tool_api(request, tool_id):
             
             # Cập nhật log
             deploy_log.status = 'stopped'
-            deploy_log.log += f"\n\nDừng thành công:\n{result.stdout}"
+            deploy_log.log += f"\n\nSuccessfully stopped:\n{result.stdout}"
             deploy_log.save()
             
             return JsonResponse({
                 'status': 'success',
-                'message': f"Đã dừng {tool.name} trên Kubernetes thành công",
+                'message': f"Successfully stopped {tool.name} on Kubernetes",
                 'details': result.stdout
             })
         else:
             # Cập nhật log
             deploy_log.status = 'error'
-            deploy_log.log += f"\n\nDừng thất bại:\n{result.stderr}"
+            deploy_log.log += f"\n\nDeployment failed:\n{result.stderr}"
             deploy_log.save()
             
             return JsonResponse({
                 'status': 'error',
-                'message': f"Lỗi khi dừng tool",
+                'message': f"Error stopping tool",
                 'details': result.stderr
             }, status=400)
         
@@ -379,9 +379,9 @@ def stop_tool_api(request, tool_id):
 
 
 @extend_schema(
-    description="Xóa một công cụ",
+    description="Delete a tool",
     parameters=[
-        OpenApiParameter(name="tool_id", type=int, location=OpenApiParameter.PATH, description="ID của công cụ")
+        OpenApiParameter(name="tool_id", type=int, location=OpenApiParameter.PATH, description="ID of the tool")
     ],
     responses={
         200: {"type": "object", "properties": {"message": {"type": "string"}}},
@@ -395,18 +395,18 @@ def delete_tool_api(request, tool_id):
     try:
         tool = Tool.objects.get(id=tool_id)
         
-        # Nếu công cụ đang chạy, dừng nó trước
+        # If the tool is running, stop it first
         if tool.is_running:
             try:
-                # Tạo file tạm thời để lưu YAML
+                # Create a temporary file to save YAML
                 with tempfile.NamedTemporaryFile(suffix='.yaml', delete=False) as temp_file:
                     temp_file_path = temp_file.name
                     
-                    # Đọc template YAML
+                    # Read the YAML template
                     with open(os.path.join(settings.BASE_DIR, 'kubernetes/deployment_template.yaml'), 'r') as f:
                         deployment_template = f.read()
                     
-                    # Thay thế các biến trong template
+                    # Replace variables in the template
                     deployment_yaml = deployment_template.format(
                         tool_slug=tool.slug,
                         docker_image=tool.docker_image,
@@ -415,20 +415,20 @@ def delete_tool_api(request, tool_id):
                     
                     temp_file.write(deployment_yaml.encode())
                 
-                # Thực thi lệnh kubectl delete
+                # Execute the kubectl delete command
                 subprocess.run(
                     ['kubectl', 'delete', '-f', temp_file_path],
                     capture_output=True,
                     text=True
                 )
                 
-                # Xóa file tạm
+                # Delete the temporary file
                 os.unlink(temp_file_path)
             except Exception as e:
-                # Ghi log lỗi nhưng vẫn tiếp tục xóa công cụ
-                print(f"Lỗi khi dừng công cụ: {str(e)}")
+                # Log the error but continue with tool deletion
+                print(f"Error stopping tool: {str(e)}")
         
-        # Nếu có Docker image, xóa nó
+        # If there is a Docker image, delete it
         if tool.docker_image:
             try:
                 subprocess.run(
@@ -437,8 +437,8 @@ def delete_tool_api(request, tool_id):
                     text=True
                 )
             except Exception as e:
-                # Ghi log lỗi nhưng vẫn tiếp tục xóa công cụ
-                print(f"Lỗi khi xóa Docker image: {str(e)}")
+                # Log the error but continue with tool deletion
+                print(f"Error deleting Docker image: {str(e)}")
         
         # Lưu tên để hiển thị trong thông báo
         tool_name = tool.name
@@ -446,9 +446,9 @@ def delete_tool_api(request, tool_id):
         # Xóa công cụ
         tool.delete()
         
-        return JsonResponse({'message': f'Công cụ {tool_name} đã được xóa thành công'})
+        return JsonResponse({'message': f'Tool {tool_name} has been deleted successfully'})
     except Tool.DoesNotExist:
-        return JsonResponse({'error': 'Không tìm thấy công cụ'}, status=404)
+        return JsonResponse({'error': 'Tool not found'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 

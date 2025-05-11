@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Quản lý phụ thuộc - {{ tool.name }}{% endblock %}
+{% block title %}Dependency Management - {{ tool.name }}{% endblock %}
 
 {% block content %}
 <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-primary-50 to-white">
         <h2 class="text-xl font-bold text-gray-900 flex items-center">
             <i class="bi bi-diagram-3 mr-2 text-primary-500"></i>
-            Quản lý phụ thuộc - {{ tool.name }}
+            Dependency Management - {{ tool.name }}
         </h2>
         <a href="{% url 'dashboard:tool_detail' tool.slug %}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-            <i class="bi bi-arrow-left mr-2"></i> Quay lại
+            <i class="bi bi-arrow-left mr-2"></i> Back to tool
         </a>
     </div>
     
@@ -19,7 +19,7 @@
         <div class="mb-8">
             <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
                 <i class="bi bi-link-45deg mr-2 text-primary-500"></i>
-                Công cụ phụ thuộc hiện tại
+                Current dependencies
             </h3>
             
             {% if dependencies %}
@@ -33,8 +33,8 @@
                                     </div>
                                     <span class="text-gray-900 font-medium">{{ dep.dependent_tool.name }}</span>
                                 </div>
-                                <a href="{% url 'remove_dependency' dep.id %}" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-                                    <i class="bi bi-trash mr-1"></i> Xóa
+                                <a href="{% url 'dashboard:remove_dependency' dep.id %}" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                                    <i class="bi bi-trash mr-1"></i> Delete
                                 </a>
                             </div>
                         </li>
@@ -45,8 +45,8 @@
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">Chưa có công cụ phụ thuộc</h3>
-                    <p class="mt-1 text-sm text-gray-500">Thêm công cụ phụ thuộc bằng form bên dưới.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">No dependencies</h3>
+                    <p class="mt-1 text-sm text-gray-500">Add dependencies using the form below.</p>
                 </div>
             {% endif %}
         </div>
@@ -55,7 +55,7 @@
         <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
                 <i class="bi bi-plus-circle mr-2 text-primary-500"></i>
-                Thêm công cụ phụ thuộc mới
+                Add new dependency
             </h3>
             
             <form method="post">
@@ -63,12 +63,12 @@
                 
                 <div class="mb-5">
                     <label for="{{ form.dependent_tool.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-                        Chọn công cụ
+                        Select tool
                     </label>
                     {{ form.dependent_tool.errors }}
                     <select name="{{ form.dependent_tool.name }}" id="{{ form.dependent_tool.id_for_label }}" 
                             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md {% if form.dependent_tool.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}">
-                        <option value="">-- Chọn công cụ --</option>
+                        <option value="">-- Select tool --</option>
                         {% for choice in form.dependent_tool.field.choices %}
                             {% if choice.0 %}
                                 <option value="{{ choice.0 }}">{{ choice.1 }}</option>
@@ -82,10 +82,10 @@
                 
                 <div class="flex justify-between items-center pt-4 border-t border-gray-200">
                     <a href="{% url 'dashboard:tool_detail' tool.slug %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-                        <i class="bi bi-x mr-2"></i> Hủy
+                        <i class="bi bi-x mr-2"></i> Cancel
                     </a>
                     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-                        <i class="bi bi-plus-lg mr-2"></i> Thêm phụ thuộc
+                        <i class="bi bi-plus-lg mr-2"></i> Add dependency
                     </button>
                 </div>
             </form>
@@ -98,24 +98,24 @@
     <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
         <h3 class="text-lg font-medium text-gray-900 flex items-center">
             <i class="bi bi-info-circle mr-2 text-blue-500"></i>
-            Thông tin về phụ thuộc
+            Information about dependencies
         </h3>
     </div>
     <div class="p-6">
         <div class="prose prose-sm max-w-none text-gray-500">
-            <p>Phụ thuộc cho phép bạn xác định các công cụ khác mà công cụ này cần để hoạt động. Khi công cụ này được triển khai, tất cả các phụ thuộc sẽ được đảm bảo đang chạy.</p>
+            <p>Dependencies allow you to specify other tools that this tool needs to work. When this tool is deployed, all dependencies will be ensured to be running.</p>
             <ul class="mt-4 space-y-2">
                 <li class="flex items-start">
                     <i class="bi bi-check-circle text-green-500 mt-0.5 mr-2"></i>
-                    <span>Các công cụ phụ thuộc sẽ được triển khai trước khi công cụ này được triển khai</span>
+                    <span>Dependencies will be deployed before this tool is deployed</span>
                 </li>
                 <li class="flex items-start">
                     <i class="bi bi-check-circle text-green-500 mt-0.5 mr-2"></i>
-                    <span>Các công cụ phụ thuộc sẽ không bị dừng khi công cụ này bị dừng</span>
+                    <span>Dependencies will not be stopped when this tool is stopped</span>
                 </li>
                 <li class="flex items-start">
                     <i class="bi bi-exclamation-triangle text-yellow-500 mt-0.5 mr-2"></i>
-                    <span>Hãy cẩn thận với các phụ thuộc vòng tròn, có thể gây ra lỗi triển khai</span>
+                    <span>Be careful with circular dependencies, they can cause deployment errors</span>
                 </li>
             </ul>
         </div>

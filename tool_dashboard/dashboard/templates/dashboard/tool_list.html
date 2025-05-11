@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Danh sách công cụ{% endblock %}
+{% block title %}Tool List{% endblock %}
 
 {% block content %}
 <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
     <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-primary-50 to-white">
         <h1 class="text-xl font-bold text-gray-900 flex items-center">
             <i class="bi bi-tools mr-2 text-primary-500"></i>
-            Danh sách công cụ
+            Tool List
         </h1>
         <a href="{% url 'dashboard:tool_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-            <i class="bi bi-plus-circle mr-2"></i> Tạo công cụ mới
+            <i class="bi bi-plus-circle mr-2"></i> Create new tool
         </a>
     </div>
 
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             
-                            <p class="mt-3 text-sm text-gray-600 line-clamp-3">{{ tool.description|default:"Không có mô tả"|truncatechars:150 }}</p>
+                            <p class="mt-3 text-sm text-gray-600 line-clamp-3">{{ tool.description|default:"No description"|truncatechars:150 }}</p>
                             
                             <div class="mt-4 flex flex-wrap gap-2">
                                 {% if tool.python_script %}
@@ -97,7 +97,7 @@
                             
                             <div class="flex space-x-2">
                                 <a href="{% url 'dashboard:tool_detail' tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-                                    <i class="bi bi-eye mr-1"></i> Chi tiết
+                                    <i class="bi bi-eye mr-1"></i> Details
                                 </a>
                                 
                                 {% if not tool.is_built %}
@@ -106,11 +106,11 @@
                                     </a>
                                 {% elif not tool.is_running %}
                                     <a href="{% url 'deploy_tool' tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
-                                        <i class="bi bi-play mr-1"></i> Chạy
+                                        <i class="bi bi-play mr-1"></i> Run
                                     </a>
                                 {% else %}
                                     <a href="{% url 'stop_tool' tool.slug %}" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-                                        <i class="bi bi-stop mr-1"></i> Dừng
+                                        <i class="bi bi-stop mr-1"></i> Stop
                                     </a>
                                 {% endif %}
                             </div>
@@ -123,13 +123,13 @@
                 <div class="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-primary-100 mb-4">
                     <i class="bi bi-tools text-primary-600 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900">Chưa có công cụ nào</h3>
+                <h3 class="text-lg font-medium text-gray-900">No tools yet</h3>
                 <p class="mt-2 text-sm text-gray-500 max-w-md mx-auto">
-                    Bắt đầu bằng cách tạo công cụ đầu tiên của bạn. Công cụ cho phép bạn xây dựng và triển khai các ứng dụng Python dưới dạng dịch vụ.
+                    Start by creating your first tool. Tools allow you to build and deploy Python applications as services.
                 </p>
                 <div class="mt-6">
                     <a href="{% url 'dashboard:tool_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-                        <i class="bi bi-plus-circle mr-2"></i> Tạo công cụ mới
+                        <i class="bi bi-plus-circle mr-2"></i> Create new tool
                     </a>
                 </div>
             </div>
@@ -143,47 +143,47 @@
     <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
         <h2 class="text-lg font-medium text-gray-900 flex items-center">
             <i class="bi bi-lightning-charge mr-2 text-blue-500"></i>
-            Hướng dẫn nhanh
+            Quick start guide
         </h2>
     </div>
     <div class="p-6">
         <div class="prose prose-sm max-w-none text-gray-500">
-            <p>Dưới đây là các bước để tạo và triển khai một công cụ:</p>
+            <p>Here are the steps to create and deploy a tool:</p>
             
             <ol class="mt-4 space-y-4">
                 <li class="flex items-start">
                     <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mr-3">1</div>
                     <div>
-                        <h3 class="font-medium text-gray-900">Tạo công cụ mới</h3>
-                        <p class="mt-1">Nhấp vào nút "Tạo công cụ mới" và điền thông tin cơ bản như tên và mô tả.</p>
+                        <h3 class="font-medium text-gray-900">Create a new tool</h3>
+                        <p class="mt-1">Click the "Create new tool" button and fill in the basic information like name and description.</p>
                     </div>
                 </li>
                 <li class="flex items-start">
                     <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mr-3">2</div>
                     <div>
-                        <h3 class="font-medium text-gray-900">Viết script Python</h3>
-                        <p class="mt-1">Viết script Python với hàm <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process(input_data)</code> để xử lý dữ liệu đầu vào.</p>
+                        <h3 class="font-medium text-gray-900">Write a Python script</h3>
+                        <p class="mt-1">Write a Python script with the <code class="px-1.5 py-0.5 bg-gray-100 rounded text-primary-600 font-mono text-xs">process(input_data)</code> function to process the input data.</p>
                     </div>
                 </li>
                 <li class="flex items-start">
                     <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mr-3">3</div>
                     <div>
-                        <h3 class="font-medium text-gray-900">Thêm requirements (nếu cần)</h3>
-                        <p class="mt-1">Liệt kê các package Python cần thiết cho script của bạn.</p>
+                        <h3 class="font-medium text-gray-900">Add requirements (if needed)</h3>
+                        <p class="mt-1">List the Python packages required for your script.</p>
                     </div>
                 </li>
                 <li class="flex items-start">
                     <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mr-3">4</div>
                     <div>
-                        <h3 class="font-medium text-gray-900">Build công cụ</h3>
-                        <p class="mt-1">Nhấp vào nút "Build" để tạo Docker image cho công cụ của bạn.</p>
+                        <h3 class="font-medium text-gray-900">Build tool</h3>
+                        <p class="mt-1">Click the "Build" button to create a Docker image for your tool.</p>
                     </div>
                 </li>
                 <li class="flex items-start">
                     <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mr-3">5</div>
                     <div>
-                        <h3 class="font-medium text-gray-900">Chạy công cụ</h3>
-                        <p class="mt-1">Nhấp vào nút "Chạy" để triển khai công cụ của bạn dưới dạng dịch vụ.</p>
+                        <h3 class="font-medium text-gray-900">Run tool</h3>
+                        <p class="mt-1">Click the "Run" button to deploy your tool as a service.</p>
                     </div>
                 </li>
             </ol>
@@ -194,9 +194,9 @@
                         <i class="bi bi-lightbulb text-yellow-400"></i>
                     </div>
                     <div class="ml-3">
-                        <h3 class="text-sm font-medium text-yellow-800">Mẹo</h3>
+                        <h3 class="text-sm font-medium text-yellow-800">Tip</h3>
                         <div class="mt-2 text-sm text-yellow-700">
-                            <p>Bạn có thể quản lý biến môi trường và phụ thuộc trong trang chi tiết công cụ sau khi tạo công cụ.</p>
+                            <p>You can manage environment variables and dependencies in the tool detail page after creating the tool.</p>
                         </div>
                     </div>
                 </div>
