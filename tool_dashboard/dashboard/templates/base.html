@@ -79,7 +79,7 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex md:items-center md:space-x-8">
                     {% if request.resolver_match.namespace == 'dashboard' %}
-                        <a href="{% url 'tool_list' %}" class="text-gray-600 hover:text-primary-600 font-medium flex items-center px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">
+                        <a href="{% url 'dashboard:tool_list' %}" class="text-gray-600 hover:text-primary-600 font-medium flex items-center px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">
                             <i class="bi bi-grid-3x3-gap-fill mr-2 text-gray-400 group-hover:text-primary-500"></i> Tools
                         </a>
                         <a href="{% url 'swagger-ui' %}" class="text-gray-600 hover:text-primary-600 font-medium flex items-center px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">
@@ -87,9 +87,9 @@
                         </a>
                     {% else %}
                         {% if user.is_authenticated %}
-                            <a href="{% url 'landing' %}" class="text-gray-600 hover:text-primary-600 font-medium px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">Dashboard</a>
+                            <a href="{% url 'landing' %}" class="text-gray-600 hover:text-primary-600 font-medium px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">Home</a>
                             <a href="#features" class="text-gray-600 hover:text-primary-600 font-medium px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">Features</a>
-                            <a href="{% url 'tool_list' %}" class="text-gray-600 hover:text-primary-600 font-medium px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">Tool List</a>
+                            <a href="{% url 'dashboard:tool_list' %}" class="text-gray-600 hover:text-primary-600 font-medium px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">Tool List</a>
                         {% else %}
                             <a href="#features" class="text-gray-600 hover:text-primary-600 font-medium px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">Features</a>
                             <a href="#how-it-works" class="text-gray-600 hover:text-primary-600 font-medium px-3 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200">How It Works</a>
@@ -102,7 +102,7 @@
                 <!-- Right side buttons -->
                 <div class="flex items-center space-x-4">
                     {% if request.resolver_match.namespace == 'dashboard' %}
-                        <a href="{% url 'tool_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                        <a href="{% url 'dashboard:tool_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                             <i class="bi bi-plus-lg mr-2"></i> New Tool
                         </a>
                     {% endif %}
@@ -122,7 +122,7 @@
                                  x-cloak
                                  class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                                 <div class="py-1">
-                                    <a href="{% url 'tool_list' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <a href="{% url 'dashboard:tool_list' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="bi bi-speedometer2 mr-2"></i> Dashboard
                                     </a>
                                     <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -158,13 +158,13 @@
              class="md:hidden border-t border-gray-200">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 {% if request.resolver_match.namespace == 'dashboard' %}
-                    <a href="{% url 'tool_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200">
+                    <a href="{% url 'dashboard:tool_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200">
                         <i class="bi bi-grid-3x3-gap-fill mr-2"></i> Tools
                     </a>
                     <a href="{% url 'swagger-ui' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200">
                         <i class="bi bi-file-earmark-code mr-2"></i> API Docs
                     </a>
-                    <a href="{% url 'tool_create' %}" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:text-primary-800 hover:bg-gray-50 transition-colors duration-200">
+                    <a href="{% url 'dashboard:tool_create' %}" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:text-primary-800 hover:bg-gray-50 transition-colors duration-200">
                         <i class="bi bi-plus-lg mr-2"></i> New Tool
                     </a>
                 {% else %}
@@ -172,7 +172,7 @@
                         <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200">
                             <i class="bi bi-star mr-2"></i> Features
                         </a>
-                        <a href="{% url 'tool_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200">
+                        <a href="{% url 'dashboard:tool_list' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors duration-200">
                             <i class="bi bi-grid-3x3-gap-fill mr-2"></i> Tool List
                         </a>
                     {% else %}
@@ -236,13 +236,13 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                     <!-- Breadcrumb -->
                     <div class="flex items-center space-x-2 text-sm">
-                        <a href="{% url 'tool_list' %}" class="text-gray-500 hover:text-primary-600 flex items-center">
+                        <a href="{% url 'dashboard:tool_list' %}" class="text-gray-500 hover:text-primary-600 flex items-center">
                             <i class="bi bi-house mr-1"></i>
                             <span>Dashboard</span>
                         </a>
                         {% if tool %}
                             <span class="text-gray-400">/</span>
-                            <a href="{% url 'tool_detail' tool.slug %}" class="text-gray-500 hover:text-primary-600">{{ tool.name }}</a>
+                            <a href="{% url 'dashboard:tool_detail' tool.slug %}" class="text-gray-500 hover:text-primary-600">{{ tool.name }}</a>
                         {% endif %}
                         {% if request.resolver_match.url_name == 'edit_env_var' or request.resolver_match.url_name == 'manage_env_vars' %}
                             <span class="text-gray-400">/</span>
@@ -252,14 +252,14 @@
 
                     <!-- Quick Actions -->
                     <div class="flex items-center space-x-4">
-                        <a href="{% url 'tool_list' %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-md transition-colors duration-200">
+                        <a href="{% url 'dashboard:tool_list' %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-md transition-colors duration-200">
                             <i class="bi bi-grid-3x3-gap-fill mr-2"></i> All Tools
                         </a>
                         {% if tool %}
-                            <a href="{% url 'tool_detail' tool.slug %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-md transition-colors duration-200">
+                            <a href="{% url 'dashboard:tool_detail' tool.slug %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-md transition-colors duration-200">
                                 <i class="bi bi-info-circle mr-2"></i> Tool Details
                             </a>
-                            <a href="{% url 'manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-md transition-colors duration-200">
+                            <a href="{% url 'dashboard:manage_env_vars' tool.slug %}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-md transition-colors duration-200">
                                 <i class="bi bi-gear mr-2"></i> Environment
                             </a>
                         {% endif %}

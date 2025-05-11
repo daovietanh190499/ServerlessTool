@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib.auth.decorators import login_required
 from . import views
 
+app_name = 'dashboard'
+
 urlpatterns = [
     path('', login_required(views.ToolListView.as_view()), name='tool_list'),
     path('tool/create/', login_required(views.ToolCreateView.as_view()), name='tool_create'),
@@ -20,4 +22,6 @@ urlpatterns = [
     path('api/update-build-status/', login_required(views.update_build_status), name='update_build_status'),
     path('tool/<slug:slug>/stop/', login_required(views.stop_tool), name='stop_tool'),
     path('tool/<slug:slug>/delete/', login_required(views.delete_tool), name='tool_delete'),
+    path('tools/<int:tool_id>/input-schema/', views.edit_input_schema, name='edit_input_schema'),
+    path('tools/<int:tool_id>/output-schema/', views.edit_output_schema, name='edit_output_schema'),
 ] 
