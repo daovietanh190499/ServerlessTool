@@ -94,16 +94,31 @@ requests==2.26.0">{{ form.requirements.value|default:'' }}</textarea>
             
             <div>
                 <label for="{{ form.input_schema.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                    Input Schema (JSON)
+                    Input Schema
                 </label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="bi bi-code-square text-gray-400"></i>
-                    </div>
-                    <textarea name="{{ form.input_schema.name }}" id="{{ form.input_schema.id_for_label }}" 
-                              class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.input_schema.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
-                              rows="3" placeholder="Input schema JSON">{{ form.input_schema.value|default:'' }}</textarea>
+                <div class="mt-1 mb-2 flex items-center text-sm text-gray-500">
+                    <i class="bi bi-info-circle mr-2 text-primary-500"></i>
+                    <span>Define the input parameters for your tool.</span>
                 </div>
+                <div id="input-schema-container" class="space-y-2">
+                    <div class="flex items-center space-x-2">
+                        <input type="text" placeholder="Key" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                            <option value="string">String</option>
+                            <option value="number">Number</option>
+                            <option value="boolean">Boolean</option>
+                            <option value="array">Array</option>
+                            <option value="object">Object</option>
+                        </select>
+                        <button type="button" class="text-red-500 hover:text-red-700" onclick="removeSchemaRow(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" onclick="addSchemaRow('input-schema-container')" class="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    <i class="bi bi-plus-circle mr-1"></i> Add Field
+                </button>
+                <input type="hidden" name="{{ form.input_schema.name }}" id="{{ form.input_schema.id_for_label }}" value="{{ form.input_schema.value|default:'' }}">
                 {% if form.input_schema.errors %}
                     <p class="mt-2 text-sm text-red-600">{{ form.input_schema.errors.0 }}</p>
                 {% else %}
@@ -113,16 +128,31 @@ requests==2.26.0">{{ form.requirements.value|default:'' }}</textarea>
             
             <div>
                 <label for="{{ form.output_schema.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                    Output Schema (JSON)
+                    Output Schema
                 </label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="bi bi-code-square text-gray-400"></i>
-                    </div>
-                    <textarea name="{{ form.output_schema.name }}" id="{{ form.output_schema.id_for_label }}" 
-                              class="block w-full pl-10 pr-3 py-2 border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm {% if form.output_schema.errors %}border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500{% endif %}" 
-                              rows="3" placeholder="Output schema JSON">{{ form.output_schema.value|default:'' }}</textarea>
+                <div class="mt-1 mb-2 flex items-center text-sm text-gray-500">
+                    <i class="bi bi-info-circle mr-2 text-primary-500"></i>
+                    <span>Define the output structure of your tool.</span>
                 </div>
+                <div id="output-schema-container" class="space-y-2">
+                    <div class="flex items-center space-x-2">
+                        <input type="text" placeholder="Key" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                            <option value="string">String</option>
+                            <option value="number">Number</option>
+                            <option value="boolean">Boolean</option>
+                            <option value="array">Array</option>
+                            <option value="object">Object</option>
+                        </select>
+                        <button type="button" class="text-red-500 hover:text-red-700" onclick="removeSchemaRow(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" onclick="addSchemaRow('output-schema-container')" class="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    <i class="bi bi-plus-circle mr-1"></i> Add Field
+                </button>
+                <input type="hidden" name="{{ form.output_schema.name }}" id="{{ form.output_schema.id_for_label }}" value="{{ form.output_schema.value|default:'' }}">
                 {% if form.output_schema.errors %}
                     <p class="mt-2 text-sm text-red-600">{{ form.output_schema.errors.0 }}</p>
                 {% else %}
@@ -259,6 +289,87 @@ def process(input_data):
                 inputElement.value = editor.getValue();
                 form.submit();
             });
+        });
+    });
+
+    function addSchemaRow(containerId) {
+        const container = document.getElementById(containerId);
+        const newRow = document.createElement('div');
+        newRow.className = 'flex items-center space-x-2';
+        newRow.innerHTML = `
+            <input type="text" placeholder="Key" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+            <select class="px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+                <option value="string">String</option>
+                <option value="number">Number</option>
+                <option value="boolean">Boolean</option>
+                <option value="array">Array</option>
+                <option value="object">Object</option>
+            </select>
+            <button type="button" class="text-red-500 hover:text-red-700" onclick="removeSchemaRow(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        `;
+        container.appendChild(newRow);
+        updateSchemaJSON();
+    }
+
+    function removeSchemaRow(button) {
+        const row = button.parentElement;
+        row.remove();
+        updateSchemaJSON();
+    }
+
+    function updateSchemaJSON() {
+        // Update input schema
+        const inputSchema = {};
+        document.querySelectorAll('#input-schema-container .flex').forEach(row => {
+            const key = row.querySelector('input').value;
+            const type = row.querySelector('select').value;
+            if (key) {
+                inputSchema[key] = { type: type };
+            }
+        });
+        document.getElementById('{{ form.input_schema.id_for_label }}').value = JSON.stringify(inputSchema, null, 2);
+
+        // Update output schema
+        const outputSchema = {};
+        document.querySelectorAll('#output-schema-container .flex').forEach(row => {
+            const key = row.querySelector('input').value;
+            const type = row.querySelector('select').value;
+            if (key) {
+                outputSchema[key] = { type: type };
+            }
+        });
+        document.getElementById('{{ form.output_schema.id_for_label }}').value = JSON.stringify(outputSchema, null, 2);
+    }
+
+    // Add event listeners to update JSON when inputs change
+    document.addEventListener('DOMContentLoaded', function() {
+        const containers = ['input-schema-container', 'output-schema-container'];
+        containers.forEach(containerId => {
+            const container = document.getElementById(containerId);
+            container.addEventListener('input', updateSchemaJSON);
+            container.addEventListener('change', updateSchemaJSON);
+        });
+
+        // Initialize with existing schema if any
+        const inputSchema = JSON.parse(document.getElementById('{{ form.input_schema.id_for_label }}').value || '{}');
+        const outputSchema = JSON.parse(document.getElementById('{{ form.output_schema.id_for_label }}').value || '{}');
+
+        // Populate input schema
+        Object.entries(inputSchema).forEach(([key, value]) => {
+            const container = document.getElementById('input-schema-container');
+            const row = container.querySelector('.flex');
+            row.querySelector('input').value = key;
+            row.querySelector('select').value = value.type;
+        });
+
+        // Populate output schema
+        Object.entries(outputSchema).forEach(([key, value]) => {
+            const container = document.getElementById('output-schema-container');
+            const row = container.querySelector('.flex');
+            row.querySelector('input').value = key;
+            row.querySelector('select').value = value.type;
         });
     });
 </script>
